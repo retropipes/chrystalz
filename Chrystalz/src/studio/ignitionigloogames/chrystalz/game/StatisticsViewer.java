@@ -80,7 +80,7 @@ public class StatisticsViewer {
             StatisticsViewer.buttonPane.setLayout(new FlowLayout());
             StatisticsViewer.btnOK = new JButton("OK");
             StatisticsViewer.btnOK.addActionListener(
-                    e -> StatisticsViewer.statisticsFrame.setVisible(false));
+                    _ -> StatisticsViewer.statisticsFrame.setVisible(false));
             StatisticsViewer.statisticsValues = new JLabel[StatConstants.MAX_DISPLAY_STATS];
             for (int x = 0; x < StatConstants.MAX_DISPLAY_STATS; x++) {
                 StatisticsViewer.statisticsValues[x] = new JLabel();

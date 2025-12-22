@@ -102,7 +102,7 @@ public class ListWithDescDialog extends JDialog implements ActionListener {
                 }
             }
         });
-        ListWithDescDialog.list.addListSelectionListener(e -> descArea
+        ListWithDescDialog.list.addListSelectionListener(_ -> descArea
                 .setText(ListWithDescDialog.descs[ListWithDescDialog.list
                         .getSelectedIndex()]));
         final JScrollPane listScroller = new JScrollPane(

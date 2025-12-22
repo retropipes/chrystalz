@@ -137,6 +137,7 @@ public class VorbisAudioFileReader extends TAudioFileReader {
      * @throws javax.sound.sampled.UnsupportedAudioFileException
      * @throws java.io.IOException
      */
+    @SuppressWarnings("resource")
     @Override
     public AudioFileFormat getAudioFileFormat(final InputStream inputStream1)
             throws UnsupportedAudioFileException, IOException {

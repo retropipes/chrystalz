@@ -140,6 +140,7 @@ public abstract class TAudioFileReader extends AudioFileReader {
      * @throws javax.sound.sampled.UnsupportedAudioFileException
      * @throws java.io.IOException
      */
+    @SuppressWarnings("resource")
     @Override
     public AudioFileFormat getAudioFileFormat(final InputStream inputStream1)
             throws UnsupportedAudioFileException, IOException {
@@ -280,6 +281,7 @@ public abstract class TAudioFileReader extends AudioFileReader {
      * @throws javax.sound.sampled.UnsupportedAudioFileException
      * @throws java.io.IOException
      */
+    @SuppressWarnings("resource")
     @Override
     public AudioInputStream getAudioInputStream(final InputStream inputStream1)
             throws UnsupportedAudioFileException, IOException {

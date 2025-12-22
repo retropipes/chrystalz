@@ -96,7 +96,7 @@ public class ListWithImageDialog extends JDialog implements ActionListener {
                 }
             }
         });
-        ListWithImageDialog.list.addListSelectionListener(e -> imgLabel
+        ListWithImageDialog.list.addListSelectionListener(_ -> imgLabel
                 .setIcon(ListWithImageDialog.imgs[ListWithImageDialog.list
                         .getSelectedIndex()]));
         final JScrollPane listScroller = new JScrollPane(
