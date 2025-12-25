@@ -14,41 +14,40 @@ public class MapBattleAITask extends Thread {
 
     // Constructors
     public MapBattleAITask(final AbstractBattle battle) {
-        this.setName("Map AI Runner");
-        this.b = battle;
+	this.setName("Map AI Runner");
+	this.b = battle;
     }
 
     @Override
     public void run() {
-        try {
-            this.aiWait();
-            while (true) {
-                this.b.executeNextAIAction();
-                if (this.b.getLastAIActionResult()) {
-                    // Delay, for animation purposes
-                    try {
-                        final int battleSpeed = PreferencesManager
-                                .getBattleSpeed();
-                        Thread.sleep(battleSpeed);
-                    } catch (final InterruptedException i) {
-                        // Ignore
-                    }
-                }
-            }
-        } catch (final Throwable t) {
-            Chrystalz.getErrorLogger().logError(t);
-        }
+	try {
+	    this.aiWait();
+	    while (true) {
+		this.b.executeNextAIAction();
+		if (this.b.getLastAIActionResult()) {
+		    // Delay, for animation purposes
+		    try {
+			final int battleSpeed = PreferencesManager.getBattleSpeed();
+			Thread.sleep(battleSpeed);
+		    } catch (final InterruptedException i) {
+			// Ignore
+		    }
+		}
+	    }
+	} catch (final Throwable t) {
+	    Chrystalz.getErrorLogger().logError(t);
+	}
     }
 
     public synchronized void aiWait() {
-        try {
-            this.wait();
-        } catch (final InterruptedException e) {
-            // Ignore
-        }
+	try {
+	    this.wait();
+	} catch (final InterruptedException e) {
+	    // Ignore
+	}
     }
 
     public synchronized void aiRun() {
-        this.notify();
+	this.notify();
     }
 }

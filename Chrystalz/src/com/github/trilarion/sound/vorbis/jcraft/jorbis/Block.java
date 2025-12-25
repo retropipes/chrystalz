@@ -48,10 +48,10 @@ public class Block {
      * @param vd1
      */
     public Block(final DspState vd1) {
-        this.vd = vd1;
-        if (vd1.analysisp != 0) {
-            this.opb.writeinit();
-        }
+	this.vd = vd1;
+	if (vd1.analysisp != 0) {
+	    this.opb.writeinit();
+	}
     }
 
     /**
@@ -59,7 +59,7 @@ public class Block {
      * @param vd1
      */
     public void init(final DspState vd1) {
-        this.vd = vd1;
+	this.vd = vd1;
     }
 
     /**
@@ -67,12 +67,12 @@ public class Block {
      * @return
      */
     public int clear() {
-        if (this.vd != null) {
-            if (this.vd.analysisp != 0) {
-                this.opb.writeclear();
-            }
-        }
-        return 0;
+	if (this.vd != null) {
+	    if (this.vd.analysisp != 0) {
+		this.opb.writeclear();
+	    }
+	}
+	return 0;
     }
 
     /**
@@ -81,52 +81,51 @@ public class Block {
      * @return
      */
     public int synthesis(final Packet op) {
-        final Info vi = this.vd.vi;
-        // first things first. Make sure decode is ready
-        this.opb.readinit(op.packet_base, op.packet, op.bytes);
-        // Check the packet type
-        if (this.opb.read(1) != 0) {
-            // Oops. This is not an audio data packet
-            return -1;
-        }
-        // read our mode and pre/post windowsize
-        final int _mode = this.opb.read(this.vd.modebits);
-        if (_mode == -1) {
-            return -1;
-        }
-        this.mode = _mode;
-        this.W = vi.mode_param[this.mode].blockflag;
-        if (this.W != 0) {
-            this.lW = this.opb.read(1);
-            this.nW = this.opb.read(1);
-            if (this.nW == -1) {
-                return -1;
-            }
-        } else {
-            this.lW = 0;
-            this.nW = 0;
-        }
-        // more setup
-        this.granulepos = op.granulepos;
-        this.sequence = op.packetno - 3; // first block is third packet
-        this.eofflag = op.e_o_s;
-        // alloc pcm passback storage
-        this.pcmend = vi.blocksizes[this.W];
-        if (this.pcm.length < vi.channels) {
-            this.pcm = new float[vi.channels][];
-        }
-        for (int i = 0; i < vi.channels; i++) {
-            if (this.pcm[i] == null || this.pcm[i].length < this.pcmend) {
-                this.pcm[i] = new float[this.pcmend];
-            } else {
-                for (int j = 0; j < this.pcmend; j++) {
-                    this.pcm[i][j] = 0;
-                }
-            }
-        }
-        // unpack_header enforces range checking
-        final int type = vi.map_type[vi.mode_param[this.mode].mapping];
-        return FuncMapping.mapping_P[type].inverse(this,
-                this.vd.mode[this.mode]);
+	final Info vi = this.vd.vi;
+	// first things first. Make sure decode is ready
+	this.opb.readinit(op.packet_base, op.packet, op.bytes);
+	// Check the packet type
+	if (this.opb.read(1) != 0) {
+	    // Oops. This is not an audio data packet
+	    return -1;
+	}
+	// read our mode and pre/post windowsize
+	final int _mode = this.opb.read(this.vd.modebits);
+	if (_mode == -1) {
+	    return -1;
+	}
+	this.mode = _mode;
+	this.W = vi.mode_param[this.mode].blockflag;
+	if (this.W != 0) {
+	    this.lW = this.opb.read(1);
+	    this.nW = this.opb.read(1);
+	    if (this.nW == -1) {
+		return -1;
+	    }
+	} else {
+	    this.lW = 0;
+	    this.nW = 0;
+	}
+	// more setup
+	this.granulepos = op.granulepos;
+	this.sequence = op.packetno - 3; // first block is third packet
+	this.eofflag = op.e_o_s;
+	// alloc pcm passback storage
+	this.pcmend = vi.blocksizes[this.W];
+	if (this.pcm.length < vi.channels) {
+	    this.pcm = new float[vi.channels][];
+	}
+	for (int i = 0; i < vi.channels; i++) {
+	    if (this.pcm[i] == null || this.pcm[i].length < this.pcmend) {
+		this.pcm[i] = new float[this.pcmend];
+	    } else {
+		for (int j = 0; j < this.pcmend; j++) {
+		    this.pcm[i][j] = 0;
+		}
+	    }
+	}
+	// unpack_header enforces range checking
+	final int type = vi.map_type[vi.mode_param[this.mode].mapping];
+	return FuncMapping.mapping_P[type].inverse(this, this.vd.mode[this.mode]);
     }
 }

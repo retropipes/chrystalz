@@ -20,23 +20,22 @@ public class BossImageManager {
     private static Class<?> LOAD_CLASS = BossImageManager.class;
 
     public static BufferedImageIcon getBossImage(final int zoneID) {
-        // Get it from the cache
-        return BossImageCache.getCachedImage(MonsterNames.getName(zoneID));
+	// Get it from the cache
+	return BossImageCache.getCachedImage(MonsterNames.getName(zoneID));
     }
 
     public static BufferedImageIcon getFinalBossImage() {
-        // Get it from the cache
-        return BossImageCache.getCachedImage("chrys");
+	// Get it from the cache
+	return BossImageCache.getCachedImage("chrys");
     }
 
     static BufferedImageIcon getUncachedImage(final String name) {
-        try {
-            final URL url = BossImageManager.LOAD_CLASS
-                    .getResource(BossImageManager.LOAD_PATH + name + ".png");
-            final BufferedImage image = ImageIO.read(url);
-            return new BufferedImageIcon(image);
-        } catch (final IOException ie) {
-            return null;
-        }
+	try {
+	    final URL url = BossImageManager.LOAD_CLASS.getResource(BossImageManager.LOAD_PATH + name + ".png");
+	    final BufferedImage image = ImageIO.read(url);
+	    return new BufferedImageIcon(image);
+	} catch (final IOException ie) {
+	    return null;
+	}
     }
 }

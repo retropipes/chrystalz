@@ -18,23 +18,23 @@ class BossBattleRewards {
 
     // Constructor
     private BossBattleRewards() {
-        // Do nothing
+	// Do nothing
     }
 
     // Methods
     public static void doRewards(final BattleResult br) {
-        final PartyMember player = PartyManager.getParty().getLeader();
-        player.healAndRegenerateFully();
-        if (br == BattleResult.LOST) {
-            player.offsetExperiencePercentage(-10);
-            player.offsetGoldPercentage(-100);
-        } else if (br == BattleResult.ANNIHILATED) {
-            player.offsetExperiencePercentage(-20);
-            player.offsetGoldPercentage(-100);
-        } else if (br == BattleResult.WON || br == BattleResult.PERFECT) {
-            SoundManager.playSound(SoundConstants.BOSS_DIE);
-            // Send player to next zone
-            Chrystalz.getApplication().getGame().goToLevelOffset(1);
-        }
+	final PartyMember player = PartyManager.getParty().getLeader();
+	player.healAndRegenerateFully();
+	if (br == BattleResult.LOST) {
+	    player.offsetExperiencePercentage(-10);
+	    player.offsetGoldPercentage(-100);
+	} else if (br == BattleResult.ANNIHILATED) {
+	    player.offsetExperiencePercentage(-20);
+	    player.offsetGoldPercentage(-100);
+	} else if (br == BattleResult.WON || br == BattleResult.PERFECT) {
+	    SoundManager.playSound(SoundConstants.BOSS_DIE);
+	    // Send player to next zone
+	    Chrystalz.getApplication().getGame().goToLevelOffset(1);
+	}
     }
 }

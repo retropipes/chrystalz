@@ -17,21 +17,20 @@ public class SoundManager {
     private static Class<?> LOAD_CLASS = SoundManager.class;
 
     private static WAVFactory getSound(final String filename) {
-        final URL url = SoundManager.LOAD_CLASS
-                .getResource(SoundManager.LOAD_PATH + filename.toLowerCase()
-                        + Extension.getSoundExtensionWithPeriod());
-        return WAVFactory.getNonLoopingResource(url);
+	final URL url = SoundManager.LOAD_CLASS
+		.getResource(SoundManager.LOAD_PATH + filename.toLowerCase() + Extension.getSoundExtensionWithPeriod());
+	return WAVFactory.getNonLoopingResource(url);
     }
 
     public static void playSound(final int soundID) {
-        try {
-            if (PreferencesManager.getSoundsEnabled()) {
-                final String soundName = SoundConstants.getSoundName(soundID);
-                final WAVFactory snd = SoundManager.getSound(soundName);
-                snd.start();
-            }
-        } catch (final ArrayIndexOutOfBoundsException aioob) {
-            // Do nothing
-        }
+	try {
+	    if (PreferencesManager.getSoundsEnabled()) {
+		final String soundName = SoundConstants.getSoundName(soundID);
+		final WAVFactory snd = SoundManager.getSound(soundName);
+		snd.start();
+	    }
+	} catch (final ArrayIndexOutOfBoundsException aioob) {
+	    // Do nothing
+	}
     }
 }

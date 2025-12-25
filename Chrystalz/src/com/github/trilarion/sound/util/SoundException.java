@@ -27,12 +27,12 @@ public class SoundException extends Exception {
     private static final long serialVersionUID = 1911865565530244040L;
 
     /**
-     * Only a constructor with a string argument to force users to give
-     * meaningful messages.
+     * Only a constructor with a string argument to force users to give meaningful
+     * messages.
      *
      * @param s
      */
     public SoundException(final String s) {
-        super("Vorbis exception " + s);
+	super("Vorbis exception " + s);
     }
 }

@@ -12,11 +12,10 @@ import studio.ignitionigloogames.chrystalz.names.ZoneNames;
 class WeaponMaterialConstants {
     // Private Constructor
     private WeaponMaterialConstants() {
-        // Do nothing
+	// Do nothing
     }
 
     public static synchronized String getWeaponMaterial(final int index) {
-        return StringManager.getLocalizedString(LocalizedFile.WEAPONS,
-                ZoneNames.getZoneNumber(index));
+	return StringManager.getLocalizedString(LocalizedFile.WEAPONS, ZoneNames.getZoneNumber(index));
     }
 }

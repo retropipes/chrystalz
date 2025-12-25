@@ -6,5 +6,6 @@ All support is handled via the GitHub repository: https://github.com/IgnitionIgl
 package studio.ignitionigloogames.chrystalz.manager.string;
 
 public enum GlobalFile {
-    ARMOR_TYPES, WEAPON_TYPES;
+    ARMOR_TYPES,
+    WEAPON_TYPES;
 }

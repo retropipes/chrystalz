@@ -6,5 +6,6 @@ All support is handled via the GitHub repository: https://github.com/IgnitionIgl
 package studio.ignitionigloogames.chrystalz.battle;
 
 public enum BattleTarget {
-    SELF, ENEMY;
+    SELF,
+    ENEMY;
 }

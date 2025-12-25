@@ -7,7 +7,7 @@ package studio.ignitionigloogames.chrystalz.manager.string;
 
 class FilePaths {
     private FilePaths() {
-        // Do nothing
+	// Do nothing
     }
 
     static final String BASE = "/strings/";

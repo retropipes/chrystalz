@@ -25,21 +25,19 @@ public class ObjectImageManager {
      * @param transformColor
      * @return
      */
-    public static BufferedImageIcon getImage(final String name,
-            final int baseID) {
-        // Get it from the cache
-        final String baseName = ObjectImageConstants.getObjectImageName(baseID);
-        return ObjectImageCache.getCachedImage(name, baseName);
+    public static BufferedImageIcon getImage(final String name, final int baseID) {
+	// Get it from the cache
+	final String baseName = ObjectImageConstants.getObjectImageName(baseID);
+	return ObjectImageCache.getCachedImage(name, baseName);
     }
 
     static BufferedImageIcon getUncachedImage(final String name) {
-        try {
-            final URL url = ObjectImageManager.LOAD_CLASS
-                    .getResource(ObjectImageManager.LOAD_PATH + name + ".png");
-            final BufferedImage image = ImageIO.read(url);
-            return new BufferedImageIcon(image);
-        } catch (final IOException ie) {
-            return null;
-        }
+	try {
+	    final URL url = ObjectImageManager.LOAD_CLASS.getResource(ObjectImageManager.LOAD_PATH + name + ".png");
+	    final BufferedImage image = ImageIO.read(url);
+	    return new BufferedImageIcon(image);
+	} catch (final IOException ie) {
+	    return null;
+	}
     }
 }

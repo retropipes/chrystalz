@@ -6,6 +6,6 @@ All support is handled via the GitHub repository: https://github.com/IgnitionIgl
 package studio.ignitionigloogames.chrystalz.manager.string;
 
 class LocalizedFileList {
-    static final String[] LIST = { "monsters", "zones", "bosses", "weapons",
-            "armor", "weapontypes", "armortypes", "stats", "slots" };
+    static final String[] LIST = { "monsters", "zones", "bosses", "weapons", "armor", "weapontypes", "armortypes",
+	    "stats", "slots" };
 }

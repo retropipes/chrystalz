@@ -12,7 +12,7 @@ import studio.ignitionigloogames.chrystalz.creatures.AbstractCreature;
 public abstract class AbstractBattle {
     // Constructors
     protected AbstractBattle() {
-        // Do nothing
+	// Do nothing
     }
 
     // Generic Methods

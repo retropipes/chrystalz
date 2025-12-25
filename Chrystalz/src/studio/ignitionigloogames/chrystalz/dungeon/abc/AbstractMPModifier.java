@@ -11,26 +11,26 @@ import studio.ignitionigloogames.chrystalz.dungeon.utilities.TypeConstants;
 public abstract class AbstractMPModifier extends AbstractGameObject {
     // Constructors
     protected AbstractMPModifier() {
-        super(false, false);
+	super(false, false);
     }
 
     @Override
     protected void setTypes() {
-        this.type.set(TypeConstants.TYPE_MP_MODIFIER);
+	this.type.set(TypeConstants.TYPE_MP_MODIFIER);
     }
 
     @Override
     public int getLayer() {
-        return DungeonConstants.LAYER_OBJECT;
+	return DungeonConstants.LAYER_OBJECT;
     }
 
     @Override
     public int getCustomProperty(final int propID) {
-        return AbstractGameObject.DEFAULT_CUSTOM_VALUE;
+	return AbstractGameObject.DEFAULT_CUSTOM_VALUE;
     }
 
     @Override
     public void setCustomProperty(final int propID, final int value) {
-        // Do nothing
+	// Do nothing
     }
 }

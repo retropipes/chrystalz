@@ -25,25 +25,23 @@ public class BattleImageManager {
      * @param transformColor
      * @return
      */
-    public static BufferedImageIcon getImage(final String name,
-            final int baseID) {
-        // Get it from the cache
-        final String baseName = ObjectImageConstants.getObjectImageName(baseID);
-        return BattleImageCache.getCachedImage(name, baseName);
+    public static BufferedImageIcon getImage(final String name, final int baseID) {
+	// Get it from the cache
+	final String baseName = ObjectImageConstants.getObjectImageName(baseID);
+	return BattleImageCache.getCachedImage(name, baseName);
     }
 
     static BufferedImageIcon getUncachedImage(final String name) {
-        try {
-            final URL url = BattleImageManager.LOAD_CLASS
-                    .getResource(BattleImageManager.LOAD_PATH + name + ".png");
-            final BufferedImage image = ImageIO.read(url);
-            return new BufferedImageIcon(image);
-        } catch (final IOException ie) {
-            return null;
-        }
+	try {
+	    final URL url = BattleImageManager.LOAD_CLASS.getResource(BattleImageManager.LOAD_PATH + name + ".png");
+	    final BufferedImage image = ImageIO.read(url);
+	    return new BufferedImageIcon(image);
+	} catch (final IOException ie) {
+	    return null;
+	}
     }
 
     public static int getGraphicSize() {
-        return 64;
+	return 64;
     }
 }

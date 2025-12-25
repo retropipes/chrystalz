@@ -11,32 +11,32 @@ import studio.ignitionigloogames.chrystalz.manager.string.StringManager;
 public class ZoneNames {
     // Private constructor
     private ZoneNames() {
-        // Do nothing
+	// Do nothing
     }
 
     public static final String getName(final int ID) {
-        final String tempZoneID = Integer.toString(ID);
-        String zoneID;
-        if (tempZoneID.length() == 1) {
-            zoneID = "0" + tempZoneID;
-        } else {
-            zoneID = tempZoneID;
-        }
-        return StringManager.getLocalizedString(LocalizedFile.ZONES, zoneID);
+	final String tempZoneID = Integer.toString(ID);
+	String zoneID;
+	if (tempZoneID.length() == 1) {
+	    zoneID = "0" + tempZoneID;
+	} else {
+	    zoneID = tempZoneID;
+	}
+	return StringManager.getLocalizedString(LocalizedFile.ZONES, zoneID);
     }
 
     public static final String getZoneNumber(final int ID) {
-        final String tempZoneID = Integer.toString(ID);
-        String zoneID;
-        if (tempZoneID.length() == 1) {
-            zoneID = "0" + tempZoneID;
-        } else {
-            zoneID = tempZoneID;
-        }
-        return zoneID;
+	final String tempZoneID = Integer.toString(ID);
+	String zoneID;
+	if (tempZoneID.length() == 1) {
+	    zoneID = "0" + tempZoneID;
+	} else {
+	    zoneID = tempZoneID;
+	}
+	return zoneID;
     }
 
     public static final String getZoneName(final int ID) {
-        return "zone" + ZoneNames.getZoneNumber(ID) + "/";
+	return "zone" + ZoneNames.getZoneNumber(ID) + "/";
     }
 }

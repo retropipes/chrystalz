@@ -6,5 +6,9 @@ All support is handled via the GitHub repository: https://github.com/IgnitionIgl
 package studio.ignitionigloogames.chrystalz.shops;
 
 public enum ShopType {
-    WEAPONS, ARMOR, HEALER, REGENERATOR, SPELLS;
+    WEAPONS,
+    ARMOR,
+    HEALER,
+    REGENERATOR,
+    SPELLS;
 }

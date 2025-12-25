@@ -16,6 +16,6 @@ public class DungeonConstants {
     public static final int VISION_MODE_EXPLORE_AND_LOS = 3;
 
     private DungeonConstants() {
-        // Do nothing
+	// Do nothing
     }
 }

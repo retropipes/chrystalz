@@ -21,14 +21,13 @@ public class ObjectImageConstants {
     public static final int TILE = 11;
     public static final int WALL = 12;
     public static final int WEAPONS_SHOP = 13;
-    private static final String[] NAMES = ImageDataManager
-            .getObjectGraphicsData();
+    private static final String[] NAMES = ImageDataManager.getObjectGraphicsData();
 
     static String getObjectImageName(final int ID) {
-        if (ID == ObjectImageConstants.NONE) {
-            return ObjectImageConstants.NAMES[ObjectImageConstants.EMPTY];
-        } else {
-            return ObjectImageConstants.NAMES[ID];
-        }
+	if (ID == ObjectImageConstants.NONE) {
+	    return ObjectImageConstants.NAMES[ObjectImageConstants.EMPTY];
+	} else {
+	    return ObjectImageConstants.NAMES[ID];
+	}
     }
 }

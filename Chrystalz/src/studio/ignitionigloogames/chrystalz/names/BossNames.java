@@ -11,17 +11,17 @@ import studio.ignitionigloogames.chrystalz.manager.string.StringManager;
 public class BossNames {
     // Private constructor
     private BossNames() {
-        // Do nothing
+	// Do nothing
     }
 
     public static final String getName(final int ID) {
-        final String tempBossID = Integer.toString(ID);
-        String bossID;
-        if (tempBossID.length() == 1) {
-            bossID = "0" + tempBossID;
-        } else {
-            bossID = tempBossID;
-        }
-        return StringManager.getLocalizedString(LocalizedFile.BOSSES, bossID);
+	final String tempBossID = Integer.toString(ID);
+	String bossID;
+	if (tempBossID.length() == 1) {
+	    bossID = "0" + tempBossID;
+	} else {
+	    bossID = tempBossID;
+	}
+	return StringManager.getLocalizedString(LocalizedFile.BOSSES, bossID);
     }
 }

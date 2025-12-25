@@ -11,16 +11,16 @@ import studio.ignitionigloogames.chrystalz.dungeon.utilities.TypeConstants;
 public abstract class AbstractTeleport extends AbstractGameObject {
     // Constructors
     protected AbstractTeleport() {
-        super(false, true, false);
+	super(false, true, false);
     }
 
     @Override
     public int getLayer() {
-        return DungeonConstants.LAYER_OBJECT;
+	return DungeonConstants.LAYER_OBJECT;
     }
 
     @Override
     protected void setTypes() {
-        this.type.set(TypeConstants.TYPE_TELEPORT);
+	this.type.set(TypeConstants.TYPE_TELEPORT);
     }
 }

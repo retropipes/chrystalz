@@ -43,13 +43,12 @@ import com.github.trilarion.sound.sampled.AudioFormats;
 // format lists
 // - consistent implementation of replacing NOT_SPECIFIED when not given in
 // conversion
-public abstract class SimpleFormatConversionProvider
-        extends TFormatConversionProvider {
+public abstract class SimpleFormatConversionProvider extends TFormatConversionProvider {
     private static void collectEncodings(final Collection<AudioFormat> formats,
-            final Collection<AudioFormat.Encoding> encodings) {
-        for (final AudioFormat format : formats) {
-            encodings.add(format.getEncoding());
-        }
+	    final Collection<AudioFormat.Encoding> encodings) {
+	for (final AudioFormat format : formats) {
+	    encodings.add(format.getEncoding());
+	}
     }
 
     private final Collection<AudioFormat.Encoding> m_sourceEncodings;
@@ -62,90 +61,79 @@ public abstract class SimpleFormatConversionProvider
      * @param sourceFormats
      * @param targetFormats
      */
-    protected SimpleFormatConversionProvider(
-            Collection<AudioFormat> sourceFormats1,
-            Collection<AudioFormat> targetFormats1) {
-        Collection<AudioFormat> sourceFormats = sourceFormats1;
-        Collection<AudioFormat> targetFormats = targetFormats1;
-        this.m_sourceEncodings = new ArrayList<>();
-        this.m_targetEncodings = new ArrayList<>();
-        if (sourceFormats == null) {
-            sourceFormats = new ArrayList<>();
-        }
-        if (targetFormats == null) {
-            targetFormats = new ArrayList<>();
-        }
-        this.m_sourceFormats = sourceFormats;
-        this.m_targetFormats = targetFormats;
-        SimpleFormatConversionProvider.collectEncodings(this.m_sourceFormats,
-                this.m_sourceEncodings);
-        SimpleFormatConversionProvider.collectEncodings(this.m_targetFormats,
-                this.m_targetEncodings);
+    protected SimpleFormatConversionProvider(Collection<AudioFormat> sourceFormats1,
+	    Collection<AudioFormat> targetFormats1) {
+	Collection<AudioFormat> sourceFormats = sourceFormats1;
+	Collection<AudioFormat> targetFormats = targetFormats1;
+	this.m_sourceEncodings = new ArrayList<>();
+	this.m_targetEncodings = new ArrayList<>();
+	if (sourceFormats == null) {
+	    sourceFormats = new ArrayList<>();
+	}
+	if (targetFormats == null) {
+	    targetFormats = new ArrayList<>();
+	}
+	this.m_sourceFormats = sourceFormats;
+	this.m_targetFormats = targetFormats;
+	SimpleFormatConversionProvider.collectEncodings(this.m_sourceFormats, this.m_sourceEncodings);
+	SimpleFormatConversionProvider.collectEncodings(this.m_targetFormats, this.m_targetEncodings);
     }
 
     @Override
     public AudioFormat.Encoding[] getSourceEncodings() {
-        return this.m_sourceEncodings
-                .toArray(TFormatConversionProvider.EMPTY_ENCODING_ARRAY);
+	return this.m_sourceEncodings.toArray(TFormatConversionProvider.EMPTY_ENCODING_ARRAY);
     }
 
     @Override
     public AudioFormat.Encoding[] getTargetEncodings() {
-        return this.m_targetEncodings
-                .toArray(TFormatConversionProvider.EMPTY_ENCODING_ARRAY);
+	return this.m_targetEncodings.toArray(TFormatConversionProvider.EMPTY_ENCODING_ARRAY);
     }
 
     // overwritten of FormatConversionProvider
     @Override
-    public boolean isSourceEncodingSupported(
-            final AudioFormat.Encoding sourceEncoding) {
-        return this.m_sourceEncodings.contains(sourceEncoding);
+    public boolean isSourceEncodingSupported(final AudioFormat.Encoding sourceEncoding) {
+	return this.m_sourceEncodings.contains(sourceEncoding);
     }
 
     // overwritten of FormatConversionProvider
     @Override
-    public boolean isTargetEncodingSupported(
-            final AudioFormat.Encoding targetEncoding) {
-        return this.m_targetEncodings.contains(targetEncoding);
+    public boolean isTargetEncodingSupported(final AudioFormat.Encoding targetEncoding) {
+	return this.m_targetEncodings.contains(targetEncoding);
     }
 
     /**
-     * This implementation assumes that the converter can convert from each of
-     * its source encodings to each of its target encodings. If this is not the
-     * case, the converter has to override this method.
+     * This implementation assumes that the converter can convert from each of its
+     * source encodings to each of its target encodings. If this is not the case,
+     * the converter has to override this method.
      *
      * @param sourceFormat
      * @return
      */
     @Override
-    public AudioFormat.Encoding[] getTargetEncodings(
-            final AudioFormat sourceFormat) {
-        if (this.isAllowedSourceFormat(sourceFormat)) {
-            return this.getTargetEncodings();
-        } else {
-            return TFormatConversionProvider.EMPTY_ENCODING_ARRAY;
-        }
+    public AudioFormat.Encoding[] getTargetEncodings(final AudioFormat sourceFormat) {
+	if (this.isAllowedSourceFormat(sourceFormat)) {
+	    return this.getTargetEncodings();
+	} else {
+	    return TFormatConversionProvider.EMPTY_ENCODING_ARRAY;
+	}
     }
 
     /**
-     * This implementation assumes that the converter can convert from each of
-     * its source formats to each of its target formats. If this is not the
-     * case, the converter has to override this method.
+     * This implementation assumes that the converter can convert from each of its
+     * source formats to each of its target formats. If this is not the case, the
+     * converter has to override this method.
      *
      * @param targetEncoding
      * @param sourceFormat
      * @return
      */
     @Override
-    public AudioFormat[] getTargetFormats(
-            final AudioFormat.Encoding targetEncoding,
-            final AudioFormat sourceFormat) {
-        if (this.isConversionSupported(targetEncoding, sourceFormat)) {
-            return this.m_targetFormats
-                    .toArray(TFormatConversionProvider.EMPTY_FORMAT_ARRAY);
-        } else {
-            return TFormatConversionProvider.EMPTY_FORMAT_ARRAY;
-        }
+    public AudioFormat[] getTargetFormats(final AudioFormat.Encoding targetEncoding, final AudioFormat sourceFormat) {
+	if (this.isConversionSupported(targetEncoding, sourceFormat)) {
+	    return this.m_targetFormats.toArray(TFormatConversionProvider.EMPTY_FORMAT_ARRAY);
+	} else {
+	    return TFormatConversionProvider.EMPTY_FORMAT_ARRAY;
+	}
     }
 
     /**
@@ -154,11 +142,11 @@ public abstract class SimpleFormatConversionProvider
      * @return
      */
     protected boolean isAllowedSourceFormat(final AudioFormat sourceFormat) {
-        for (final AudioFormat format : this.m_sourceFormats) {
-            if (AudioFormats.matches(format, sourceFormat)) {
-                return true;
-            }
-        }
-        return false;
+	for (final AudioFormat format : this.m_sourceFormats) {
+	    if (AudioFormats.matches(format, sourceFormat)) {
+		return true;
+	    }
+	}
+	return false;
     }
 }

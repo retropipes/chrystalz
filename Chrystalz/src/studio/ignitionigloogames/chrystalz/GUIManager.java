@@ -36,91 +36,87 @@ public final class GUIManager implements QuitHandler {
 
     // Constructors
     public GUIManager() {
-        this.guiFrame = new JFrame("Chrystalz");
-        final Image iconlogo = LogoManager.getIconLogo();
-        this.guiFrame.setIconImage(iconlogo);
-        final Container guiPane = this.guiFrame.getContentPane();
-        this.guiFrame
-                .setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        this.guiFrame.setLayout(new GridLayout(1, 1));
-        this.logoLabel = new JLabel("", null, SwingConstants.CENTER);
-        this.logoLabel.setBorder(new EmptyBorder(0, 0, 0, 0));
-        guiPane.add(this.logoLabel);
-        this.guiFrame.setResizable(false);
+	this.guiFrame = new JFrame("Chrystalz");
+	final Image iconlogo = LogoManager.getIconLogo();
+	this.guiFrame.setIconImage(iconlogo);
+	final Container guiPane = this.guiFrame.getContentPane();
+	this.guiFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+	this.guiFrame.setLayout(new GridLayout(1, 1));
+	this.logoLabel = new JLabel("", null, SwingConstants.CENTER);
+	this.logoLabel.setBorder(new EmptyBorder(0, 0, 0, 0));
+	guiPane.add(this.logoLabel);
+	this.guiFrame.setResizable(false);
     }
 
     // Methods
     public JFrame getGUIFrame() {
-        if (this.guiFrame.isVisible()) {
-            return this.guiFrame;
-        } else {
-            return null;
-        }
+	if (this.guiFrame.isVisible()) {
+	    return this.guiFrame;
+	} else {
+	    return null;
+	}
     }
 
     public void showGUI() {
-        if (MusicManager.isMusicPlaying()) {
-            MusicManager.stopMusic();
-        }
-        MusicManager.playMusic(MusicConstants.MUSIC_TITLE);
-        this.showGUICommon();
+	if (MusicManager.isMusicPlaying()) {
+	    MusicManager.stopMusic();
+	}
+	MusicManager.playMusic(MusicConstants.MUSIC_TITLE);
+	this.showGUICommon();
     }
 
     public void showGUIAndKeepMusic() {
-        this.showGUICommon();
+	this.showGUICommon();
     }
 
     private void showGUICommon() {
-        final Application app = Chrystalz.getApplication();
-        app.setMode(Application.STATUS_GUI);
-        this.guiFrame.setJMenuBar(app.getMenuManager().getMainMenuBar());
-        this.guiFrame.setVisible(true);
-        app.getMenuManager().setMainMenus();
-        app.getMenuManager().checkFlags();
+	final Application app = Chrystalz.getApplication();
+	app.setMode(Application.STATUS_GUI);
+	this.guiFrame.setJMenuBar(app.getMenuManager().getMainMenuBar());
+	this.guiFrame.setVisible(true);
+	app.getMenuManager().setMainMenus();
+	app.getMenuManager().checkFlags();
     }
 
     public void hideGUI() {
-        this.guiFrame.setVisible(false);
+	this.guiFrame.setVisible(false);
     }
 
     public void updateLogo() {
-        final BufferedImageIcon logo = LogoManager.getLogo();
-        this.logoLabel.setIcon(logo);
-        final Image iconlogo = Application.getIconLogo();
-        this.guiFrame.setIconImage(iconlogo);
-        this.guiFrame.pack();
+	final BufferedImageIcon logo = LogoManager.getLogo();
+	this.logoLabel.setIcon(logo);
+	final Image iconlogo = Application.getIconLogo();
+	this.guiFrame.setIconImage(iconlogo);
+	this.guiFrame.pack();
     }
 
     @Override
-    public void handleQuitRequestWith(final QuitEvent qe,
-            final QuitResponse qr) {
-        final DungeonManager mm = Chrystalz.getApplication()
-                .getDungeonManager();
-        boolean saved = true;
-        int status = JOptionPane.DEFAULT_OPTION;
-        if (mm.getDirty()) {
-            status = DungeonManager.showSaveDialog();
-            if (status == JOptionPane.YES_OPTION) {
-                saved = DungeonManager.saveGame();
-            } else if (status == JOptionPane.CANCEL_OPTION) {
-                saved = false;
-            } else {
-                mm.setDirty(false);
-            }
-        }
-        if (saved) {
-            PreferencesManager.writePrefs();
-            // Run cleanup task
-            try {
-                final File dirToDelete = new File(
-                        Dungeon.getDungeonTempFolder());
-                DirectoryUtilities.removeDirectory(dirToDelete);
-            } catch (final Throwable t) {
-                // Ignore
-            }
-            qr.performQuit();
-        } else {
-            qr.cancelQuit();
-        }
+    public void handleQuitRequestWith(final QuitEvent qe, final QuitResponse qr) {
+	final DungeonManager mm = Chrystalz.getApplication().getDungeonManager();
+	boolean saved = true;
+	int status = JOptionPane.DEFAULT_OPTION;
+	if (mm.getDirty()) {
+	    status = DungeonManager.showSaveDialog();
+	    if (status == JOptionPane.YES_OPTION) {
+		saved = DungeonManager.saveGame();
+	    } else if (status == JOptionPane.CANCEL_OPTION) {
+		saved = false;
+	    } else {
+		mm.setDirty(false);
+	    }
+	}
+	if (saved) {
+	    PreferencesManager.writePrefs();
+	    // Run cleanup task
+	    try {
+		final File dirToDelete = new File(Dungeon.getDungeonTempFolder());
+		DirectoryUtilities.removeDirectory(dirToDelete);
+	    } catch (final Throwable t) {
+		// Ignore
+	    }
+	    qr.performQuit();
+	} else {
+	    qr.cancelQuit();
+	}
     }
 }

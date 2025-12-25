@@ -29,77 +29,74 @@ public class AboutDialog implements AboutHandler {
 
     // Constructors
     public AboutDialog(final String ver) {
-        this.setUpGUI(ver);
+	this.setUpGUI(ver);
     }
 
     // Methods
     @Override
     public void handleAbout(final AboutEvent ae) {
-        this.showAboutDialog();
+	this.showAboutDialog();
     }
-    
+
     public void showAboutDialog() {
-        this.aboutFrame.setVisible(true);
+	this.aboutFrame.setVisible(true);
     }
 
     void hideAboutDialog() {
-        this.aboutFrame.setVisible(false);
+	this.aboutFrame.setVisible(false);
     }
 
     private void setUpGUI(final String ver) {
-        final EventHandler handler = new EventHandler();
-        this.aboutFrame = new JFrame("About Chrystalz");
-        final Image iconlogo = LogoManager.getIconLogo();
-        this.aboutFrame.setIconImage(iconlogo);
-        final Container aboutPane = new Container();
-        final Container textPane = new Container();
-        final Container buttonPane = new Container();
-        final Container logoPane = new Container();
-        final JButton aboutOK = new JButton("OK");
-        final JLabel miniLabel = new JLabel("", LogoManager.getMiniatureLogo(),
-                SwingConstants.LEFT);
-        miniLabel.setLabelFor(null);
-        aboutOK.setDefaultCapable(true);
-        this.aboutFrame.getRootPane().setDefaultButton(aboutOK);
-        this.aboutFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        aboutPane.setLayout(new BorderLayout());
-        logoPane.setLayout(new FlowLayout());
-        logoPane.add(miniLabel);
-        textPane.setLayout(new GridLayout(4, 1));
-        textPane.add(new JLabel("Chrystalz Version: " + ver));
-        textPane.add(new JLabel("Author: Eric Ahnell"));
-        textPane.add(new JLabel(
-                "Web Site: http://www.ignitionigloogames.studio/chrystalz.html"));
-        textPane.add(new JLabel(
-                "Support: https://github.com/IgnitionIglooGames/chrystalz/"));
-        buttonPane.setLayout(new FlowLayout());
-        buttonPane.add(aboutOK);
-        aboutPane.add(logoPane, BorderLayout.WEST);
-        aboutPane.add(textPane, BorderLayout.CENTER);
-        aboutPane.add(buttonPane, BorderLayout.SOUTH);
-        this.aboutFrame.setResizable(false);
-        aboutOK.addActionListener(handler);
-        this.aboutFrame.setContentPane(aboutPane);
-        this.aboutFrame.pack();
+	final EventHandler handler = new EventHandler();
+	this.aboutFrame = new JFrame("About Chrystalz");
+	final Image iconlogo = LogoManager.getIconLogo();
+	this.aboutFrame.setIconImage(iconlogo);
+	final Container aboutPane = new Container();
+	final Container textPane = new Container();
+	final Container buttonPane = new Container();
+	final Container logoPane = new Container();
+	final JButton aboutOK = new JButton("OK");
+	final JLabel miniLabel = new JLabel("", LogoManager.getMiniatureLogo(), SwingConstants.LEFT);
+	miniLabel.setLabelFor(null);
+	aboutOK.setDefaultCapable(true);
+	this.aboutFrame.getRootPane().setDefaultButton(aboutOK);
+	this.aboutFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+	aboutPane.setLayout(new BorderLayout());
+	logoPane.setLayout(new FlowLayout());
+	logoPane.add(miniLabel);
+	textPane.setLayout(new GridLayout(4, 1));
+	textPane.add(new JLabel("Chrystalz Version: " + ver));
+	textPane.add(new JLabel("Author: Eric Ahnell"));
+	textPane.add(new JLabel("Web Site: http://www.ignitionigloogames.studio/chrystalz.html"));
+	textPane.add(new JLabel("Support: https://github.com/IgnitionIglooGames/chrystalz/"));
+	buttonPane.setLayout(new FlowLayout());
+	buttonPane.add(aboutOK);
+	aboutPane.add(logoPane, BorderLayout.WEST);
+	aboutPane.add(textPane, BorderLayout.CENTER);
+	aboutPane.add(buttonPane, BorderLayout.SOUTH);
+	this.aboutFrame.setResizable(false);
+	aboutOK.addActionListener(handler);
+	this.aboutFrame.setContentPane(aboutPane);
+	this.aboutFrame.pack();
     }
 
     private class EventHandler implements ActionListener {
-        EventHandler() {
-            // Do nothing
-        }
+	EventHandler() {
+	    // Do nothing
+	}
 
-        // Handle buttons
-        @Override
-        public void actionPerformed(final ActionEvent e) {
-            try {
-                final AboutDialog ad = AboutDialog.this;
-                final String cmd = e.getActionCommand();
-                if (cmd.equals("OK")) {
-                    ad.hideAboutDialog();
-                }
-            } catch (final Exception ex) {
-                Chrystalz.getErrorLogger().logError(ex);
-            }
-        }
+	// Handle buttons
+	@Override
+	public void actionPerformed(final ActionEvent e) {
+	    try {
+		final AboutDialog ad = AboutDialog.this;
+		final String cmd = e.getActionCommand();
+		if (cmd.equals("OK")) {
+		    ad.hideAboutDialog();
+		}
+	    } catch (final Exception ex) {
+		Chrystalz.getErrorLogger().logError(ex);
+	    }
+	}
     }
 }

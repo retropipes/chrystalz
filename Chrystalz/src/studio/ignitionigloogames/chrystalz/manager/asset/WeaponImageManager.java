@@ -21,23 +21,20 @@ public class WeaponImageManager {
     private static String LOAD_PATH = WeaponImageManager.DEFAULT_LOAD_PATH;
     private static Class<?> LOAD_CLASS = WeaponImageManager.class;
 
-    public static BufferedImageIcon getImage(final int typeID,
-            final int zoneID) {
-        // Get it from the cache
-        final String name = StringManager
-                .getGlobalString(GlobalFile.WEAPON_TYPES, typeID) + "/"
-                + ZoneNames.getZoneNumber(zoneID);
-        return WeaponImageCache.getCachedImage(name);
+    public static BufferedImageIcon getImage(final int typeID, final int zoneID) {
+	// Get it from the cache
+	final String name = StringManager.getGlobalString(GlobalFile.WEAPON_TYPES, typeID) + "/"
+		+ ZoneNames.getZoneNumber(zoneID);
+	return WeaponImageCache.getCachedImage(name);
     }
 
     static BufferedImageIcon getUncachedImage(final String name) {
-        try {
-            final URL url = WeaponImageManager.LOAD_CLASS
-                    .getResource(WeaponImageManager.LOAD_PATH + name + ".png");
-            final BufferedImage image = ImageIO.read(url);
-            return new BufferedImageIcon(image);
-        } catch (final IOException ie) {
-            return null;
-        }
+	try {
+	    final URL url = WeaponImageManager.LOAD_CLASS.getResource(WeaponImageManager.LOAD_PATH + name + ".png");
+	    final BufferedImage image = ImageIO.read(url);
+	    return new BufferedImageIcon(image);
+	} catch (final IOException ie) {
+	    return null;
+	}
     }
 }

@@ -25,8 +25,7 @@ import java.util.logging.Logger;
  * @author
  */
 public class CircularBuffer {
-    private static final Logger LOG = Logger
-            .getLogger(CircularBuffer.class.getName());
+    private static final Logger LOG = Logger.getLogger(CircularBuffer.class.getName());
     private final boolean m_bBlockingRead;
     private final boolean m_bBlockingWrite;
     private final byte[] m_abData;
@@ -40,10 +39,10 @@ public class CircularBuffer {
      * Listener
      */
     public interface BufferListener {
-        /**
-         * Data is ready.
-         */
-        void dataReady();
+	/**
+	 * Data is ready.
+	 */
+	void dataReady();
     }
 
     /**
@@ -53,31 +52,31 @@ public class CircularBuffer {
      * @param bBlockingWrite
      * @param trigger
      */
-    public CircularBuffer(final int nSize, final boolean bBlockingRead,
-            final boolean bBlockingWrite, final BufferListener trigger) {
-        this.m_bBlockingRead = bBlockingRead;
-        this.m_bBlockingWrite = bBlockingWrite;
-        this.m_nSize = nSize;
-        this.m_abData = new byte[this.m_nSize];
-        this.m_lReadPos = 0;
-        this.m_lWritePos = 0;
-        this.m_trigger = trigger;
-        this.m_bOpen = true;
+    public CircularBuffer(final int nSize, final boolean bBlockingRead, final boolean bBlockingWrite,
+	    final BufferListener trigger) {
+	this.m_bBlockingRead = bBlockingRead;
+	this.m_bBlockingWrite = bBlockingWrite;
+	this.m_nSize = nSize;
+	this.m_abData = new byte[this.m_nSize];
+	this.m_lReadPos = 0;
+	this.m_lWritePos = 0;
+	this.m_trigger = trigger;
+	this.m_bOpen = true;
     }
 
     /**
      * Close
      */
     public void close() {
-        this.m_bOpen = false;
-        // TODO: call notify() ?
+	this.m_bOpen = false;
+	// TODO: call notify() ?
     }
 
     /**
      *
      */
     private boolean isOpen() {
-        return this.m_bOpen;
+	return this.m_bOpen;
     }
 
     /**
@@ -85,7 +84,7 @@ public class CircularBuffer {
      * @return
      */
     public int availableRead() {
-        return (int) (this.m_lWritePos - this.m_lReadPos);
+	return (int) (this.m_lWritePos - this.m_lReadPos);
     }
 
     /**
@@ -93,15 +92,15 @@ public class CircularBuffer {
      * @return
      */
     public int availableWrite() {
-        return this.m_nSize - this.availableRead();
+	return this.m_nSize - this.availableRead();
     }
 
     private int getReadPos() {
-        return (int) (this.m_lReadPos % this.m_nSize);
+	return (int) (this.m_lReadPos % this.m_nSize);
     }
 
     private int getWritePos() {
-        return (int) (this.m_lWritePos % this.m_nSize);
+	return (int) (this.m_lWritePos % this.m_nSize);
     }
 
     /**
@@ -111,59 +110,53 @@ public class CircularBuffer {
      * @param nLength
      * @return
      */
-    public int read(final byte[] abData, final int nOffset1,
-            final int nLength1) {
-        int nOffset = nOffset1;
-        int nLength = nLength1;
-        CircularBuffer.LOG.log(Level.FINE, ">TCircularBuffer.read(): called.");
-        this.dumpInternalState();
-        if (!this.isOpen()) {
-            if (this.availableRead() > 0) {
-                nLength = Math.min(nLength, this.availableRead());
-                CircularBuffer.LOG.log(Level.FINE,
-                        "reading rest in closed buffer, length: {0}", nLength);
-            } else {
-                CircularBuffer.LOG.log(Level.FINE, "< not open. returning -1.");
-                return -1;
-            }
-        }
-        synchronized (this) {
-            if (this.m_trigger != null && this.availableRead() < nLength) {
-                CircularBuffer.LOG.log(Level.FINE, "executing trigger.");
-                this.m_trigger.dataReady();
-            }
-            if (!this.m_bBlockingRead) {
-                nLength = Math.min(this.availableRead(), nLength);
-            }
-            int nRemainingBytes = nLength;
-            while (nRemainingBytes > 0) {
-                while (this.availableRead() == 0) {
-                    try {
-                        this.wait();
-                    } catch (final InterruptedException e) {
-                        CircularBuffer.LOG.log(Level.FINE, e.getMessage());
-                    }
-                }
-                int nAvailable = Math.min(this.availableRead(),
-                        nRemainingBytes);
-                while (nAvailable > 0) {
-                    final int nToRead = Math.min(nAvailable,
-                            this.m_nSize - this.getReadPos());
-                    System.arraycopy(this.m_abData, this.getReadPos(), abData,
-                            nOffset, nToRead);
-                    this.m_lReadPos += nToRead;
-                    nOffset += nToRead;
-                    nAvailable -= nToRead;
-                    nRemainingBytes -= nToRead;
-                }
-                this.notifyAll();
-            }
-            CircularBuffer.LOG.log(Level.FINE, "After read:");
-            // dumpInternalState();
-            CircularBuffer.LOG.log(Level.FINE, "< completed. Read {0} bytes",
-                    nLength);
-            return nLength;
-        }
+    public int read(final byte[] abData, final int nOffset1, final int nLength1) {
+	int nOffset = nOffset1;
+	int nLength = nLength1;
+	CircularBuffer.LOG.log(Level.FINE, ">TCircularBuffer.read(): called.");
+	this.dumpInternalState();
+	if (!this.isOpen()) {
+	    if (this.availableRead() > 0) {
+		nLength = Math.min(nLength, this.availableRead());
+		CircularBuffer.LOG.log(Level.FINE, "reading rest in closed buffer, length: {0}", nLength);
+	    } else {
+		CircularBuffer.LOG.log(Level.FINE, "< not open. returning -1.");
+		return -1;
+	    }
+	}
+	synchronized (this) {
+	    if (this.m_trigger != null && this.availableRead() < nLength) {
+		CircularBuffer.LOG.log(Level.FINE, "executing trigger.");
+		this.m_trigger.dataReady();
+	    }
+	    if (!this.m_bBlockingRead) {
+		nLength = Math.min(this.availableRead(), nLength);
+	    }
+	    int nRemainingBytes = nLength;
+	    while (nRemainingBytes > 0) {
+		while (this.availableRead() == 0) {
+		    try {
+			this.wait();
+		    } catch (final InterruptedException e) {
+			CircularBuffer.LOG.log(Level.FINE, e.getMessage());
+		    }
+		}
+		int nAvailable = Math.min(this.availableRead(), nRemainingBytes);
+		while (nAvailable > 0) {
+		    final int nToRead = Math.min(nAvailable, this.m_nSize - this.getReadPos());
+		    System.arraycopy(this.m_abData, this.getReadPos(), abData, nOffset, nToRead);
+		    this.m_lReadPos += nToRead;
+		    nOffset += nToRead;
+		    nAvailable -= nToRead;
+		    nRemainingBytes -= nToRead;
+		}
+		this.notifyAll();
+	    }
+	    CircularBuffer.LOG.log(Level.FINE, "After read:");
+	    // dumpInternalState();
+	    CircularBuffer.LOG.log(Level.FINE, "< completed. Read {0} bytes", nLength);
+	    return nLength;
+	}
     }
 
     /**
@@ -173,60 +166,52 @@ public class CircularBuffer {
      * @param nLength
      * @return
      */
-    public int write(final byte[] abData, final int nOffset1,
-            final int nLength1) {
-        int nOffset = nOffset1;
-        int nLength = nLength1;
-        CircularBuffer.LOG.log(Level.FINE,
-                ">TCircularBuffer.write(): called; nLength: {0}", nLength);
-        this.dumpInternalState();
-        synchronized (this) {
-            CircularBuffer.LOG.log(Level.FINE, "entered synchronized block.");
-            if (!this.m_bBlockingWrite) {
-                nLength = Math.min(this.availableWrite(), nLength);
-            }
-            int nRemainingBytes = nLength;
-            while (nRemainingBytes > 0) {
-                while (this.availableWrite() == 0) {
-                    try {
-                        this.wait();
-                    } catch (final InterruptedException e) {
-                        CircularBuffer.LOG.log(Level.FINE, e.getMessage());
-                    }
-                }
-                int nAvailable = Math.min(this.availableWrite(),
-                        nRemainingBytes);
-                while (nAvailable > 0) {
-                    final int nToWrite = Math.min(nAvailable,
-                            this.m_nSize - this.getWritePos());
-                    // TDebug.out("src buf size= " + abData.length + ", offset =
-                    // " + nOffset + ", dst buf size=" + m_abData.length + "
-                    // write pos=" + getWritePos() + " len=" + nToWrite);
-                    System.arraycopy(abData, nOffset, this.m_abData,
-                            this.getWritePos(), nToWrite);
-                    this.m_lWritePos += nToWrite;
-                    nOffset += nToWrite;
-                    nAvailable -= nToWrite;
-                    nRemainingBytes -= nToWrite;
-                }
-                this.notifyAll();
-            }
-            CircularBuffer.LOG.log(Level.FINE, "After write:");
-            this.dumpInternalState();
-            CircularBuffer.LOG.log(Level.FINE, "< completed. Wrote {0} bytes",
-                    nLength);
-            return nLength;
-        }
+    public int write(final byte[] abData, final int nOffset1, final int nLength1) {
+	int nOffset = nOffset1;
+	int nLength = nLength1;
+	CircularBuffer.LOG.log(Level.FINE, ">TCircularBuffer.write(): called; nLength: {0}", nLength);
+	this.dumpInternalState();
+	synchronized (this) {
+	    CircularBuffer.LOG.log(Level.FINE, "entered synchronized block.");
+	    if (!this.m_bBlockingWrite) {
+		nLength = Math.min(this.availableWrite(), nLength);
+	    }
+	    int nRemainingBytes = nLength;
+	    while (nRemainingBytes > 0) {
+		while (this.availableWrite() == 0) {
+		    try {
+			this.wait();
+		    } catch (final InterruptedException e) {
+			CircularBuffer.LOG.log(Level.FINE, e.getMessage());
+		    }
+		}
+		int nAvailable = Math.min(this.availableWrite(), nRemainingBytes);
+		while (nAvailable > 0) {
+		    final int nToWrite = Math.min(nAvailable, this.m_nSize - this.getWritePos());
+		    // TDebug.out("src buf size= " + abData.length + ", offset =
+		    // " + nOffset + ", dst buf size=" + m_abData.length + "
+		    // write pos=" + getWritePos() + " len=" + nToWrite);
+		    System.arraycopy(abData, nOffset, this.m_abData, this.getWritePos(), nToWrite);
+		    this.m_lWritePos += nToWrite;
+		    nOffset += nToWrite;
+		    nAvailable -= nToWrite;
+		    nRemainingBytes -= nToWrite;
+		}
+		this.notifyAll();
+	    }
+	    CircularBuffer.LOG.log(Level.FINE, "After write:");
+	    this.dumpInternalState();
+	    CircularBuffer.LOG.log(Level.FINE, "< completed. Wrote {0} bytes", nLength);
+	    return nLength;
+	}
     }
 
     private void dumpInternalState() {
-        CircularBuffer.LOG.log(Level.FINE, "m_lReadPos  = {0} ^= {1}",
-                new Object[] { this.m_lReadPos, this.getReadPos() });
-        CircularBuffer.LOG.log(Level.FINE, "m_lWritePos = {0} ^= {1}",
-                new Object[] { this.m_lWritePos, this.getWritePos() });
-        CircularBuffer.LOG.log(Level.FINE, "availableRead()  = {0}",
-                this.availableRead());
-        CircularBuffer.LOG.log(Level.FINE, "availableWrite() = {0}",
-                this.availableWrite());
+	CircularBuffer.LOG.log(Level.FINE, "m_lReadPos  = {0} ^= {1}",
+		new Object[] { this.m_lReadPos, this.getReadPos() });
+	CircularBuffer.LOG.log(Level.FINE, "m_lWritePos = {0} ^= {1}",
+		new Object[] { this.m_lWritePos, this.getWritePos() });
+	CircularBuffer.LOG.log(Level.FINE, "availableRead()  = {0}", this.availableRead());
+	CircularBuffer.LOG.log(Level.FINE, "availableWrite() = {0}", this.availableWrite());
     }
 }

@@ -21,22 +21,21 @@ public class EquipmentSlotConstants {
     private static String[] SLOT_NAMES = null;
 
     static synchronized String[] getSlotNames() {
-        if (EquipmentSlotConstants.SLOT_NAMES == null) {
-            final String[] temp = new String[EquipmentSlotConstants.MAX_SLOTS];
-            for (int x = 0; x < temp.length; x++) {
-                temp[x] = StringManager.getLocalizedString(LocalizedFile.SLOTS,
-                        x);
-            }
-            EquipmentSlotConstants.SLOT_NAMES = temp;
-        }
-        return EquipmentSlotConstants.SLOT_NAMES;
+	if (EquipmentSlotConstants.SLOT_NAMES == null) {
+	    final String[] temp = new String[EquipmentSlotConstants.MAX_SLOTS];
+	    for (int x = 0; x < temp.length; x++) {
+		temp[x] = StringManager.getLocalizedString(LocalizedFile.SLOTS, x);
+	    }
+	    EquipmentSlotConstants.SLOT_NAMES = temp;
+	}
+	return EquipmentSlotConstants.SLOT_NAMES;
     }
 
     public static int getArmorSlotForType(final int armorType) {
-        if (armorType >= EquipmentSlotConstants.SLOT_WEAPON) {
-            return armorType + 1;
-        } else {
-            return armorType;
-        }
+	if (armorType >= EquipmentSlotConstants.SLOT_WEAPON) {
+	    return armorType + 1;
+	} else {
+	    return armorType;
+	}
     }
 }

@@ -28,133 +28,117 @@ class BossMonster extends AbstractMonster {
 
     // Constructors
     BossMonster() {
-        super();
-        this.image = this.getInitialImage();
+	super();
+	this.image = this.getInitialImage();
     }
 
     @Override
     protected BufferedImageIcon getInitialImage() {
-        final int zoneID = PartyManager.getParty().getZone();
-        return BossImageManager.getBossImage(zoneID);
+	final int zoneID = PartyManager.getParty().getZone();
+	return BossImageManager.getBossImage(zoneID);
     }
 
     @Override
     public void loadCreature() {
-        final int zoneID = PartyManager.getParty().getZone();
-        final String bossName = BossNames.getName(zoneID);
-        this.overrideDefaults(zoneID, bossName);
-        final int newLevel = zoneID + 1;
-        this.setLevel(newLevel);
-        this.setVitality(this.getInitialVitality());
-        this.setCurrentHP(this.getMaximumHP());
-        this.setIntelligence(this.getInitialIntelligence());
-        this.setCurrentMP(this.getMaximumMP());
-        this.setStrength(this.getInitialStrength());
-        this.setBlock(this.getInitialBlock());
-        this.setAgility(this.getInitialAgility());
-        this.setLuck(this.getInitialLuck());
-        this.setGold(BossMonster.getInitialGold());
-        this.setExperience((long) (this.getInitialExperience()
-                * this.adjustForLevelDifference()));
-        this.setAttacksPerRound(1);
-        this.setSpellsPerRound(1);
-        this.image = this.getInitialImage();
+	final int zoneID = PartyManager.getParty().getZone();
+	final String bossName = BossNames.getName(zoneID);
+	this.overrideDefaults(zoneID, bossName);
+	final int newLevel = zoneID + 1;
+	this.setLevel(newLevel);
+	this.setVitality(this.getInitialVitality());
+	this.setCurrentHP(this.getMaximumHP());
+	this.setIntelligence(this.getInitialIntelligence());
+	this.setCurrentMP(this.getMaximumMP());
+	this.setStrength(this.getInitialStrength());
+	this.setBlock(this.getInitialBlock());
+	this.setAgility(this.getInitialAgility());
+	this.setLuck(this.getInitialLuck());
+	this.setGold(BossMonster.getInitialGold());
+	this.setExperience((long) (this.getInitialExperience() * this.adjustForLevelDifference()));
+	this.setAttacksPerRound(1);
+	this.setSpellsPerRound(1);
+	this.image = this.getInitialImage();
     }
 
     private int getInitialStrength() {
-        final RandomRange r = new RandomRange(1,
-                Math.max(
-                        this.getLevel()
-                                * BossMonster.getStatMultiplierForDifficulty(),
-                        1));
-        return r.generate();
+	final RandomRange r = new RandomRange(1,
+		Math.max(this.getLevel() * BossMonster.getStatMultiplierForDifficulty(), 1));
+	return r.generate();
     }
 
     private int getInitialBlock() {
-        final RandomRange r = new RandomRange(0,
-                this.getLevel() * BossMonster.getStatMultiplierForDifficulty());
-        return r.generate();
+	final RandomRange r = new RandomRange(0, this.getLevel() * BossMonster.getStatMultiplierForDifficulty());
+	return r.generate();
     }
 
     private long getInitialExperience() {
-        int minvar, maxvar;
-        minvar = (int) (this.getLevel()
-                * AbstractMonster.MINIMUM_EXPERIENCE_RANDOM_VARIANCE);
-        maxvar = (int) (this.getLevel()
-                * AbstractMonster.MAXIMUM_EXPERIENCE_RANDOM_VARIANCE);
-        final RandomLongRange r = new RandomLongRange(minvar, maxvar);
-        final long expbase = PartyManager.getParty().getPartyMaxToNextLevel();
-        final long factor = this.getBattlesToNextLevel();
-        return (int) (expbase / factor
-                + r.generate() * this.adjustForLevelDifference()
-                        * BossMonster.getExpMultiplierForDifficulty());
+	int minvar, maxvar;
+	minvar = (int) (this.getLevel() * AbstractMonster.MINIMUM_EXPERIENCE_RANDOM_VARIANCE);
+	maxvar = (int) (this.getLevel() * AbstractMonster.MAXIMUM_EXPERIENCE_RANDOM_VARIANCE);
+	final RandomLongRange r = new RandomLongRange(minvar, maxvar);
+	final long expbase = PartyManager.getParty().getPartyMaxToNextLevel();
+	final long factor = this.getBattlesToNextLevel();
+	return (int) (expbase / factor
+		+ r.generate() * this.adjustForLevelDifference() * BossMonster.getExpMultiplierForDifficulty());
     }
 
     private static int getInitialGold() {
-        return 0;
+	return 0;
     }
 
     private int getInitialAgility() {
-        final RandomRange r = new RandomRange(1,
-                Math.max(
-                        this.getLevel()
-                                * BossMonster.getStatMultiplierForDifficulty(),
-                        1));
-        return r.generate();
+	final RandomRange r = new RandomRange(1,
+		Math.max(this.getLevel() * BossMonster.getStatMultiplierForDifficulty(), 1));
+	return r.generate();
     }
 
     private int getInitialVitality() {
-        final RandomRange r = new RandomRange(1,
-                Math.max(
-                        this.getLevel()
-                                * BossMonster.getStatMultiplierForDifficulty(),
-                        1));
-        return r.generate();
+	final RandomRange r = new RandomRange(1,
+		Math.max(this.getLevel() * BossMonster.getStatMultiplierForDifficulty(), 1));
+	return r.generate();
     }
 
     private int getInitialIntelligence() {
-        final RandomRange r = new RandomRange(0,
-                this.getLevel() * BossMonster.getStatMultiplierForDifficulty());
-        return r.generate();
+	final RandomRange r = new RandomRange(0, this.getLevel() * BossMonster.getStatMultiplierForDifficulty());
+	return r.generate();
     }
 
     private int getInitialLuck() {
-        final RandomRange r = new RandomRange(0,
-                this.getLevel() * BossMonster.getStatMultiplierForDifficulty());
-        return r.generate();
+	final RandomRange r = new RandomRange(0, this.getLevel() * BossMonster.getStatMultiplierForDifficulty());
+	return r.generate();
     }
 
     private static int getStatMultiplierForDifficulty() {
-        final int difficulty = PreferencesManager.getGameDifficulty();
-        if (difficulty == PreferencesManager.DIFFICULTY_VERY_EASY) {
-            return BossMonster.STAT_MULT_VERY_EASY;
-        } else if (difficulty == PreferencesManager.DIFFICULTY_EASY) {
-            return BossMonster.STAT_MULT_EASY;
-        } else if (difficulty == PreferencesManager.DIFFICULTY_NORMAL) {
-            return BossMonster.STAT_MULT_NORMAL;
-        } else if (difficulty == PreferencesManager.DIFFICULTY_HARD) {
-            return BossMonster.STAT_MULT_HARD;
-        } else if (difficulty == PreferencesManager.DIFFICULTY_VERY_HARD) {
-            return BossMonster.STAT_MULT_VERY_HARD;
-        } else {
-            return BossMonster.STAT_MULT_NORMAL;
-        }
+	final int difficulty = PreferencesManager.getGameDifficulty();
+	if (difficulty == PreferencesManager.DIFFICULTY_VERY_EASY) {
+	    return BossMonster.STAT_MULT_VERY_EASY;
+	} else if (difficulty == PreferencesManager.DIFFICULTY_EASY) {
+	    return BossMonster.STAT_MULT_EASY;
+	} else if (difficulty == PreferencesManager.DIFFICULTY_NORMAL) {
+	    return BossMonster.STAT_MULT_NORMAL;
+	} else if (difficulty == PreferencesManager.DIFFICULTY_HARD) {
+	    return BossMonster.STAT_MULT_HARD;
+	} else if (difficulty == PreferencesManager.DIFFICULTY_VERY_HARD) {
+	    return BossMonster.STAT_MULT_VERY_HARD;
+	} else {
+	    return BossMonster.STAT_MULT_NORMAL;
+	}
     }
 
     private static double getExpMultiplierForDifficulty() {
-        final int difficulty = PreferencesManager.getGameDifficulty();
-        if (difficulty == PreferencesManager.DIFFICULTY_VERY_EASY) {
-            return BossMonster.EXP_MULT_VERY_EASY;
-        } else if (difficulty == PreferencesManager.DIFFICULTY_EASY) {
-            return BossMonster.EXP_MULT_EASY;
-        } else if (difficulty == PreferencesManager.DIFFICULTY_NORMAL) {
-            return BossMonster.EXP_MULT_NORMAL;
-        } else if (difficulty == PreferencesManager.DIFFICULTY_HARD) {
-            return BossMonster.EXP_MULT_HARD;
-        } else if (difficulty == PreferencesManager.DIFFICULTY_VERY_HARD) {
-            return BossMonster.EXP_MULT_VERY_HARD;
-        } else {
-            return BossMonster.EXP_MULT_NORMAL;
-        }
+	final int difficulty = PreferencesManager.getGameDifficulty();
+	if (difficulty == PreferencesManager.DIFFICULTY_VERY_EASY) {
+	    return BossMonster.EXP_MULT_VERY_EASY;
+	} else if (difficulty == PreferencesManager.DIFFICULTY_EASY) {
+	    return BossMonster.EXP_MULT_EASY;
+	} else if (difficulty == PreferencesManager.DIFFICULTY_NORMAL) {
+	    return BossMonster.EXP_MULT_NORMAL;
+	} else if (difficulty == PreferencesManager.DIFFICULTY_HARD) {
+	    return BossMonster.EXP_MULT_HARD;
+	} else if (difficulty == PreferencesManager.DIFFICULTY_VERY_HARD) {
+	    return BossMonster.EXP_MULT_VERY_HARD;
+	} else {
+	    return BossMonster.EXP_MULT_NORMAL;
+	}
     }
 }

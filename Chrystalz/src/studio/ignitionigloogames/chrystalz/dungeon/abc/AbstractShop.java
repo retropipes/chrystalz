@@ -19,43 +19,41 @@ public abstract class AbstractShop extends AbstractGameObject {
 
     // Constructors
     public AbstractShop(final ShopType newShopType) {
-        super(false, false);
-        this.shopType = newShopType;
+	super(false, false);
+	this.shopType = newShopType;
     }
 
     // Methods
     @Override
     protected void setTypes() {
-        this.type.set(TypeConstants.TYPE_SHOP);
+	this.type.set(TypeConstants.TYPE_SHOP);
     }
 
     @Override
-    public void postMoveAction(final boolean ie, final int dirX,
-            final int dirY) {
-        SoundManager.playSound(SoundConstants.WALK);
+    public void postMoveAction(final boolean ie, final int dirX, final int dirY) {
+	SoundManager.playSound(SoundConstants.WALK);
     }
 
     @Override
     public void interactAction() {
-        final Shop shop = Chrystalz.getApplication()
-                .getGenericShop(this.shopType);
-        if (shop != null) {
-            shop.showShop();
-        }
+	final Shop shop = Chrystalz.getApplication().getGenericShop(this.shopType);
+	if (shop != null) {
+	    shop.showShop();
+	}
     }
 
     @Override
     public int getLayer() {
-        return DungeonConstants.LAYER_OBJECT;
+	return DungeonConstants.LAYER_OBJECT;
     }
 
     @Override
     public int getCustomProperty(final int propID) {
-        return AbstractGameObject.DEFAULT_CUSTOM_VALUE;
+	return AbstractGameObject.DEFAULT_CUSTOM_VALUE;
     }
 
     @Override
     public void setCustomProperty(final int propID, final int value) {
-        // Do nothing
+	// Do nothing
     }
 }

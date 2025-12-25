@@ -15,35 +15,35 @@ import studio.ignitionigloogames.chrystalz.manager.asset.SoundManager;
 public class ClosedDoor extends AbstractPassThroughObject {
     // Constructors
     public ClosedDoor() {
-        super();
+	super();
     }
 
     @Override
     public int getBaseID() {
-        return ObjectImageConstants.CLOSED_DOOR;
+	return ObjectImageConstants.CLOSED_DOOR;
     }
 
     // Scriptability
     @Override
     public String getName() {
-        return "Closed Door";
+	return "Closed Door";
     }
 
     @Override
     public String getPluralName() {
-        return "Closed Doors";
+	return "Closed Doors";
     }
 
     @Override
     public String getDescription() {
-        return "Closed Doors open when stepped on.";
+	return "Closed Doors open when stepped on.";
     }
 
     @Override
     public void interactAction() {
-        SoundManager.playSound(SoundConstants.DOOR_OPENS);
-        final GameLogic glm = Chrystalz.getApplication().getGame();
-        GameLogic.morph(new OpenDoor());
-        glm.redrawDungeon();
+	SoundManager.playSound(SoundConstants.DOOR_OPENS);
+	final GameLogic glm = Chrystalz.getApplication().getGame();
+	GameLogic.morph(new OpenDoor());
+	glm.redrawDungeon();
     }
 }

@@ -17,7 +17,7 @@ public class BufferedImageIcon extends BufferedImage implements Icon {
      * @param bi
      */
     public BufferedImageIcon(final int width, final int height) {
-        super(width, height, BufferedImageIcon.DEFAULT_TYPE);
+	super(width, height, BufferedImageIcon.DEFAULT_TYPE);
     }
 
     /**
@@ -26,12 +26,12 @@ public class BufferedImageIcon extends BufferedImage implements Icon {
      * @param bi
      */
     public BufferedImageIcon(final BufferedImage bi) {
-        super(bi.getWidth(), bi.getHeight(), BufferedImageIcon.DEFAULT_TYPE);
-        for (int x = 0; x < bi.getWidth(); x++) {
-            for (int y = 0; y < bi.getHeight(); y++) {
-                this.setRGB(x, y, bi.getRGB(x, y));
-            }
-        }
+	super(bi.getWidth(), bi.getHeight(), BufferedImageIcon.DEFAULT_TYPE);
+	for (int x = 0; x < bi.getWidth(); x++) {
+	    for (int y = 0; y < bi.getHeight(); y++) {
+		this.setRGB(x, y, bi.getRGB(x, y));
+	    }
+	}
     }
 
     /**
@@ -44,9 +44,8 @@ public class BufferedImageIcon extends BufferedImage implements Icon {
      * @param y
      */
     @Override
-    public void paintIcon(final Component c, final Graphics g, final int x,
-            final int y) {
-        g.drawImage(this, x, y, c);
+    public void paintIcon(final Component c, final Graphics g, final int x, final int y) {
+	g.drawImage(this, x, y, c);
     }
 
     /**
@@ -54,7 +53,7 @@ public class BufferedImageIcon extends BufferedImage implements Icon {
      */
     @Override
     public int getIconWidth() {
-        return this.getWidth();
+	return this.getWidth();
     }
 
     /**
@@ -62,6 +61,6 @@ public class BufferedImageIcon extends BufferedImage implements Icon {
      */
     @Override
     public int getIconHeight() {
-        return this.getHeight();
+	return this.getHeight();
     }
 }

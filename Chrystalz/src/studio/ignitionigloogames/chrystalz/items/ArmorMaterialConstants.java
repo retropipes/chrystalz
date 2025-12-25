@@ -12,11 +12,10 @@ import studio.ignitionigloogames.chrystalz.names.ZoneNames;
 class ArmorMaterialConstants {
     // Private Constructor
     private ArmorMaterialConstants() {
-        // Do nothing
+	// Do nothing
     }
 
     public static synchronized String getArmorMaterial(final int index) {
-        return StringManager.getLocalizedString(LocalizedFile.ARMOR,
-                ZoneNames.getZoneNumber(index));
+	return StringManager.getLocalizedString(LocalizedFile.ARMOR, ZoneNames.getZoneNumber(index));
     }
 }

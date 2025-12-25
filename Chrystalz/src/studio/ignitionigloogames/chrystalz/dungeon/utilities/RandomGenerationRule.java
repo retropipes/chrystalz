@@ -10,8 +10,7 @@ import studio.ignitionigloogames.chrystalz.dungeon.Dungeon;
 public interface RandomGenerationRule {
     public static final int NO_LIMIT = 0;
 
-    public boolean shouldGenerateObject(Dungeon dungeon, int row, int col,
-            int level, int layer);
+    public boolean shouldGenerateObject(Dungeon dungeon, int row, int col, int level, int layer);
 
     public int getMinimumRequiredQuantity(Dungeon dungeon);
 

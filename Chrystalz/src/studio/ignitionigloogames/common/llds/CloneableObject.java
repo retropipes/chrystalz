@@ -3,12 +3,12 @@ package studio.ignitionigloogames.common.llds;
 public class CloneableObject implements Cloneable {
     // Constructor
     public CloneableObject() {
-        super();
+	super();
     }
 
     // Method
     @Override
     public Object clone() throws CloneNotSupportedException {
-        return super.clone();
+	return super.clone();
     }
 }

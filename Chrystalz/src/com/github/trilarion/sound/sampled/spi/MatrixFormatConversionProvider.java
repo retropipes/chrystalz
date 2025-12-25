@@ -33,23 +33,22 @@ import com.github.trilarion.sound.sampled.AudioFormats;
  *
  * @author Matthias Pfisterer
  */
-public abstract class MatrixFormatConversionProvider
-        extends SimpleFormatConversionProvider {
+public abstract class MatrixFormatConversionProvider extends SimpleFormatConversionProvider {
     /*
      * keys: source AudioFormat values: collection of possible target encodings
      *
-     * Note that accessing values with get() is not appropriate, since the
-     * equals() method in AudioFormat is not overloaded. The hashtable is just
-     * used as a convenient storage organization.
+     * Note that accessing values with get() is not appropriate, since the equals()
+     * method in AudioFormat is not overloaded. The hashtable is just used as a
+     * convenient storage organization.
      */
     private final Map<AudioFormat, List<AudioFormat.Encoding>> m_targetEncodingsFromSourceFormat;
     /*
-     * keys: source AudioFormat values: a Map that contains a mapping from
-     * target encodings (keys) to a collection of target formats (values).
+     * keys: source AudioFormat values: a Map that contains a mapping from target
+     * encodings (keys) to a collection of target formats (values).
      *
-     * Note that accessing values with get() is not appropriate, since the
-     * equals() method in AudioFormat is not overloaded. The hashtable is just
-     * used as a convenient storage organization.
+     * Note that accessing values with get() is not appropriate, since the equals()
+     * method in AudioFormat is not overloaded. The hashtable is just used as a
+     * convenient storage organization.
      */
     private final Map<AudioFormat, Map<AudioFormat.Encoding, Collection<AudioFormat>>> m_targetFormatsFromSourceFormat;
 
@@ -59,57 +58,45 @@ public abstract class MatrixFormatConversionProvider
      * @param targetFormats
      * @param abConversionPossible
      */
-    protected MatrixFormatConversionProvider(
-            final List<AudioFormat> sourceFormats,
-            final List<AudioFormat> targetFormats,
-            final boolean[][] abConversionPossible) {
-        super(sourceFormats, targetFormats);
-        this.m_targetEncodingsFromSourceFormat = new HashMap<>();
-        this.m_targetFormatsFromSourceFormat = new HashMap<>();
-        for (int nSourceFormat = 0; nSourceFormat < sourceFormats
-                .size(); nSourceFormat++) {
-            final AudioFormat sourceFormat = sourceFormats.get(nSourceFormat);
-            final List<AudioFormat.Encoding> supportedTargetEncodings = new ArrayList<>();
-            this.m_targetEncodingsFromSourceFormat.put(sourceFormat,
-                    supportedTargetEncodings);
-            final Map<AudioFormat.Encoding, Collection<AudioFormat>> targetFormatsFromTargetEncodings = new HashMap<>();
-            this.m_targetFormatsFromSourceFormat.put(sourceFormat,
-                    targetFormatsFromTargetEncodings);
-            for (int nTargetFormat = 0; nTargetFormat < targetFormats
-                    .size(); nTargetFormat++) {
-                final AudioFormat targetFormat = targetFormats
-                        .get(nTargetFormat);
-                if (abConversionPossible[nSourceFormat][nTargetFormat]) {
-                    final AudioFormat.Encoding targetEncoding = targetFormat
-                            .getEncoding();
-                    supportedTargetEncodings.add(targetEncoding);
-                    Collection<AudioFormat> supportedTargetFormats = targetFormatsFromTargetEncodings
-                            .get(targetEncoding);
-                    if (supportedTargetFormats == null) {
-                        supportedTargetFormats = new ArrayList<>();
-                        targetFormatsFromTargetEncodings.put(targetEncoding,
-                                supportedTargetFormats);
-                    }
-                    supportedTargetFormats.add(targetFormat);
-                }
-            }
-        }
+    protected MatrixFormatConversionProvider(final List<AudioFormat> sourceFormats,
+	    final List<AudioFormat> targetFormats, final boolean[][] abConversionPossible) {
+	super(sourceFormats, targetFormats);
+	this.m_targetEncodingsFromSourceFormat = new HashMap<>();
+	this.m_targetFormatsFromSourceFormat = new HashMap<>();
+	for (int nSourceFormat = 0; nSourceFormat < sourceFormats.size(); nSourceFormat++) {
+	    final AudioFormat sourceFormat = sourceFormats.get(nSourceFormat);
+	    final List<AudioFormat.Encoding> supportedTargetEncodings = new ArrayList<>();
+	    this.m_targetEncodingsFromSourceFormat.put(sourceFormat, supportedTargetEncodings);
+	    final Map<AudioFormat.Encoding, Collection<AudioFormat>> targetFormatsFromTargetEncodings = new HashMap<>();
+	    this.m_targetFormatsFromSourceFormat.put(sourceFormat, targetFormatsFromTargetEncodings);
+	    for (int nTargetFormat = 0; nTargetFormat < targetFormats.size(); nTargetFormat++) {
+		final AudioFormat targetFormat = targetFormats.get(nTargetFormat);
+		if (abConversionPossible[nSourceFormat][nTargetFormat]) {
+		    final AudioFormat.Encoding targetEncoding = targetFormat.getEncoding();
+		    supportedTargetEncodings.add(targetEncoding);
+		    Collection<AudioFormat> supportedTargetFormats = targetFormatsFromTargetEncodings
+			    .get(targetEncoding);
+		    if (supportedTargetFormats == null) {
+			supportedTargetFormats = new ArrayList<>();
+			targetFormatsFromTargetEncodings.put(targetEncoding, supportedTargetFormats);
+		    }
+		    supportedTargetFormats.add(targetFormat);
+		}
+	    }
+	}
     }
 
     @Override
-    public AudioFormat.Encoding[] getTargetEncodings(
-            final AudioFormat sourceFormat) {
-        for (final Entry<AudioFormat, List<AudioFormat.Encoding>> entry : this.m_targetEncodingsFromSourceFormat
-                .entrySet()) {
-            final AudioFormat format = entry.getKey();
-            if (AudioFormats.matches(format, sourceFormat)) {
-                final List<AudioFormat.Encoding> targetEncodings = entry
-                        .getValue();
-                return targetEncodings.toArray(
-                        TFormatConversionProvider.EMPTY_ENCODING_ARRAY);
-            }
-        }
-        return TFormatConversionProvider.EMPTY_ENCODING_ARRAY;
+    public AudioFormat.Encoding[] getTargetEncodings(final AudioFormat sourceFormat) {
+	for (final Entry<AudioFormat, List<AudioFormat.Encoding>> entry : this.m_targetEncodingsFromSourceFormat
+		.entrySet()) {
+	    final AudioFormat format = entry.getKey();
+	    if (AudioFormats.matches(format, sourceFormat)) {
+		final List<AudioFormat.Encoding> targetEncodings = entry.getValue();
+		return targetEncodings.toArray(TFormatConversionProvider.EMPTY_ENCODING_ARRAY);
+	    }
+	}
+	return TFormatConversionProvider.EMPTY_ENCODING_ARRAY;
     }
 
     // TODO: this should work on the array returned by
@@ -120,24 +107,19 @@ public abstract class MatrixFormatConversionProvider
      * isTargetEncodingSupported(targetEncoding); }
      */
     @Override
-    public AudioFormat[] getTargetFormats(
-            final AudioFormat.Encoding targetEncoding,
-            final AudioFormat sourceFormat) {
-        for (final Entry<AudioFormat, Map<AudioFormat.Encoding, Collection<AudioFormat>>> entry : this.m_targetFormatsFromSourceFormat
-                .entrySet()) {
-            final AudioFormat format = entry.getKey();
-            if (AudioFormats.matches(format, sourceFormat)) {
-                final Map<AudioFormat.Encoding, Collection<AudioFormat>> targetEncodings = entry
-                        .getValue();
-                final Collection<AudioFormat> targetFormats = targetEncodings
-                        .get(targetEncoding);
-                if (targetFormats != null) {
-                    return targetFormats.toArray(
-                            TFormatConversionProvider.EMPTY_FORMAT_ARRAY);
-                }
-                return TFormatConversionProvider.EMPTY_FORMAT_ARRAY;
-            }
-        }
-        return TFormatConversionProvider.EMPTY_FORMAT_ARRAY;
+    public AudioFormat[] getTargetFormats(final AudioFormat.Encoding targetEncoding, final AudioFormat sourceFormat) {
+	for (final Entry<AudioFormat, Map<AudioFormat.Encoding, Collection<AudioFormat>>> entry : this.m_targetFormatsFromSourceFormat
+		.entrySet()) {
+	    final AudioFormat format = entry.getKey();
+	    if (AudioFormats.matches(format, sourceFormat)) {
+		final Map<AudioFormat.Encoding, Collection<AudioFormat>> targetEncodings = entry.getValue();
+		final Collection<AudioFormat> targetFormats = targetEncodings.get(targetEncoding);
+		if (targetFormats != null) {
+		    return targetFormats.toArray(TFormatConversionProvider.EMPTY_FORMAT_ARRAY);
+		}
+		return TFormatConversionProvider.EMPTY_FORMAT_ARRAY;
+	    }
+	}
+	return TFormatConversionProvider.EMPTY_FORMAT_ARRAY;
     }
 }

@@ -20,22 +20,19 @@ public class MonsterImageManager {
     private static String LOAD_PATH = MonsterImageManager.DEFAULT_LOAD_PATH;
     private static Class<?> LOAD_CLASS = MonsterImageManager.class;
 
-    public static BufferedImageIcon getImage(final int zoneID,
-            final int monID) {
-        // Get it from the cache
-        final String name = ZoneNames.getZoneName(zoneID)
-                + MonsterNames.getName(monID);
-        return MonsterImageCache.getCachedImage(name);
+    public static BufferedImageIcon getImage(final int zoneID, final int monID) {
+	// Get it from the cache
+	final String name = ZoneNames.getZoneName(zoneID) + MonsterNames.getName(monID);
+	return MonsterImageCache.getCachedImage(name);
     }
 
     static BufferedImageIcon getUncachedImage(final String name) {
-        try {
-            final URL url = MonsterImageManager.LOAD_CLASS
-                    .getResource(MonsterImageManager.LOAD_PATH + name + ".png");
-            final BufferedImage image = ImageIO.read(url);
-            return new BufferedImageIcon(image);
-        } catch (final IOException ie) {
-            return null;
-        }
+	try {
+	    final URL url = MonsterImageManager.LOAD_CLASS.getResource(MonsterImageManager.LOAD_PATH + name + ".png");
+	    final BufferedImage image = ImageIO.read(url);
+	    return new BufferedImageIcon(image);
+	} catch (final IOException ie) {
+	    return null;
+	}
     }
 }

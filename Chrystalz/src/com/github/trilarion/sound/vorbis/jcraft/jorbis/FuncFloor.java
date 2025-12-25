@@ -37,8 +37,7 @@ abstract class FuncFloor {
 
     abstract void free_state(Object vs);
 
-    abstract int forward(Block vb, Object i, float[] in, float[] out,
-            Object vs);
+    abstract int forward(Block vb, Object i, float[] in, float[] out, Object vs);
 
     abstract Object inverse1(Block vb, Object i, Object memo);
 

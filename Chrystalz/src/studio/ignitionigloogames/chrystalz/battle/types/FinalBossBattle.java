@@ -14,16 +14,15 @@ class FinalBossBattle extends AbstractBattleType {
 
     // Constructors
     public FinalBossBattle() {
-        super();
-        this.boss = true;
-        this.finalBoss = true;
-        this.monster = new BattleCharacter(
-                MonsterFactory.getNewFinalBossInstance());
+	super();
+	this.boss = true;
+	this.finalBoss = true;
+	this.monster = new BattleCharacter(MonsterFactory.getNewFinalBossInstance());
     }
 
     // Methods
     @Override
     public BattleCharacter getBattlers() {
-        return this.monster;
+	return this.monster;
     }
 }

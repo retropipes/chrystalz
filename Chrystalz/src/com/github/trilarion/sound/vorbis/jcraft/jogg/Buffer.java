@@ -23,13 +23,11 @@ package com.github.trilarion.sound.vorbis.jcraft.jogg;
  */
 public class Buffer {
     private static final int BUFFER_INCREMENT = 256;
-    private static final int[] mask = { 0x00000000, 0x00000001, 0x00000003,
-            0x00000007, 0x0000000f, 0x0000001f, 0x0000003f, 0x0000007f,
-            0x000000ff, 0x000001ff, 0x000003ff, 0x000007ff, 0x00000fff,
-            0x00001fff, 0x00003fff, 0x00007fff, 0x0000ffff, 0x0001ffff,
-            0x0003ffff, 0x0007ffff, 0x000fffff, 0x001fffff, 0x003fffff,
-            0x007fffff, 0x00ffffff, 0x01ffffff, 0x03ffffff, 0x07ffffff,
-            0x0fffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff, 0xffffffff };
+    private static final int[] mask = { 0x00000000, 0x00000001, 0x00000003, 0x00000007, 0x0000000f, 0x0000001f,
+	    0x0000003f, 0x0000007f, 0x000000ff, 0x000001ff, 0x000003ff, 0x000007ff, 0x00000fff, 0x00001fff, 0x00003fff,
+	    0x00007fff, 0x0000ffff, 0x0001ffff, 0x0003ffff, 0x0007ffff, 0x000fffff, 0x001fffff, 0x003fffff, 0x007fffff,
+	    0x00ffffff, 0x01ffffff, 0x03ffffff, 0x07ffffff, 0x0fffffff, 0x1fffffff, 0x3fffffff, 0x7fffffff,
+	    0xffffffff };
     int ptr = 0;
     byte[] buffer = null;
     int endbit = 0;
@@ -40,10 +38,10 @@ public class Buffer {
      *
      */
     public void writeinit() {
-        this.buffer = new byte[Buffer.BUFFER_INCREMENT];
-        this.ptr = 0;
-        this.buffer[0] = (byte) '\0';
-        this.storage = Buffer.BUFFER_INCREMENT;
+	this.buffer = new byte[Buffer.BUFFER_INCREMENT];
+	this.ptr = 0;
+	this.buffer[0] = (byte) '\0';
+	this.storage = Buffer.BUFFER_INCREMENT;
     }
 
     /**
@@ -51,12 +49,12 @@ public class Buffer {
      * @param s
      */
     public void write(final byte[] s) {
-        for (final byte element : s) {
-            if (element == 0) {
-                break;
-            }
-            this.write(element, 8);
-        }
+	for (final byte element : s) {
+	    if (element == 0) {
+		break;
+	    }
+	    this.write(element, 8);
+	}
     }
 
     /**
@@ -65,18 +63,18 @@ public class Buffer {
      * @param bytes
      */
     public void read(final byte[] s, int bytes1) {
-        int bytes = bytes1;
-        int i = 0;
-        while (bytes-- != 0) {
-            s[i++] = (byte) this.read(8);
-        }
+	int bytes = bytes1;
+	int i = 0;
+	while (bytes-- != 0) {
+	    s[i++] = (byte) this.read(8);
+	}
     }
 
     /**
      *
      */
     public void writeclear() {
-        this.buffer = null;
+	this.buffer = null;
     }
 
     /**
@@ -85,7 +83,7 @@ public class Buffer {
      * @param bytes
      */
     public void readinit(final byte[] buf, final int bytes) {
-        this.readinit(buf, 0, bytes);
+	this.readinit(buf, 0, bytes);
     }
 
     /**
@@ -95,10 +93,10 @@ public class Buffer {
      * @param bytes
      */
     public void readinit(final byte[] buf, final int start, final int bytes) {
-        this.ptr = start;
-        this.buffer = buf;
-        this.endbit = this.endbyte = 0;
-        this.storage = bytes;
+	this.ptr = start;
+	this.buffer = buf;
+	this.endbit = this.endbyte = 0;
+	this.storage = bytes;
     }
 
     /**
@@ -107,38 +105,36 @@ public class Buffer {
      * @param bits
      */
     public void write(int value1, int bits1) {
-        int value = value1;
-        int bits = bits1;
-        if (this.endbyte + 4 >= this.storage) {
-            final byte[] foo = new byte[this.storage + Buffer.BUFFER_INCREMENT];
-            System.arraycopy(this.buffer, 0, foo, 0, this.storage);
-            this.buffer = foo;
-            this.storage += Buffer.BUFFER_INCREMENT;
-        }
-        value &= Buffer.mask[bits];
-        bits += this.endbit;
-        this.buffer[this.ptr] |= (byte) (value << this.endbit);
-        if (bits >= 8) {
-            this.buffer[this.ptr + 1] = (byte) (value >>> 8 - this.endbit);
-            if (bits >= 16) {
-                this.buffer[this.ptr + 2] = (byte) (value >>> 16 - this.endbit);
-                if (bits >= 24) {
-                    this.buffer[this.ptr
-                            + 3] = (byte) (value >>> 24 - this.endbit);
-                    if (bits >= 32) {
-                        if (this.endbit > 0) {
-                            this.buffer[this.ptr
-                                    + 4] = (byte) (value >>> 32 - this.endbit);
-                        } else {
-                            this.buffer[this.ptr + 4] = 0;
-                        }
-                    }
-                }
-            }
-        }
-        this.endbyte += bits / 8;
-        this.ptr += bits / 8;
-        this.endbit = bits & 7;
+	int value = value1;
+	int bits = bits1;
+	if (this.endbyte + 4 >= this.storage) {
+	    final byte[] foo = new byte[this.storage + Buffer.BUFFER_INCREMENT];
+	    System.arraycopy(this.buffer, 0, foo, 0, this.storage);
+	    this.buffer = foo;
+	    this.storage += Buffer.BUFFER_INCREMENT;
+	}
+	value &= Buffer.mask[bits];
+	bits += this.endbit;
+	this.buffer[this.ptr] |= (byte) (value << this.endbit);
+	if (bits >= 8) {
+	    this.buffer[this.ptr + 1] = (byte) (value >>> 8 - this.endbit);
+	    if (bits >= 16) {
+		this.buffer[this.ptr + 2] = (byte) (value >>> 16 - this.endbit);
+		if (bits >= 24) {
+		    this.buffer[this.ptr + 3] = (byte) (value >>> 24 - this.endbit);
+		    if (bits >= 32) {
+			if (this.endbit > 0) {
+			    this.buffer[this.ptr + 4] = (byte) (value >>> 32 - this.endbit);
+			} else {
+			    this.buffer[this.ptr + 4] = 0;
+			}
+		    }
+		}
+	    }
+	}
+	this.endbyte += bits / 8;
+	this.ptr += bits / 8;
+	this.endbit = bits & 7;
     }
 
     /**
@@ -147,31 +143,29 @@ public class Buffer {
      * @return
      */
     public int look(final int bits1) {
-        int bits = bits1;
-        int ret;
-        final int m = Buffer.mask[bits];
-        bits += this.endbit;
-        if (this.endbyte + 4 >= this.storage) {
-            if (this.endbyte + (bits - 1) / 8 >= this.storage) {
-                return -1;
-            }
-        }
-        ret = (this.buffer[this.ptr] & 0xff) >>> this.endbit;
-        if (bits > 8) {
-            ret |= (this.buffer[this.ptr + 1] & 0xff) << 8 - this.endbit;
-            if (bits > 16) {
-                ret |= (this.buffer[this.ptr + 2] & 0xff) << 16 - this.endbit;
-                if (bits > 24) {
-                    ret |= (this.buffer[this.ptr + 3] & 0xff) << 24
-                            - this.endbit;
-                    if (bits > 32 && this.endbit != 0) {
-                        ret |= (this.buffer[this.ptr + 4] & 0xff) << 32
-                                - this.endbit;
-                    }
-                }
-            }
-        }
-        return m & ret;
+	int bits = bits1;
+	int ret;
+	final int m = Buffer.mask[bits];
+	bits += this.endbit;
+	if (this.endbyte + 4 >= this.storage) {
+	    if (this.endbyte + (bits - 1) / 8 >= this.storage) {
+		return -1;
+	    }
+	}
+	ret = (this.buffer[this.ptr] & 0xff) >>> this.endbit;
+	if (bits > 8) {
+	    ret |= (this.buffer[this.ptr + 1] & 0xff) << 8 - this.endbit;
+	    if (bits > 16) {
+		ret |= (this.buffer[this.ptr + 2] & 0xff) << 16 - this.endbit;
+		if (bits > 24) {
+		    ret |= (this.buffer[this.ptr + 3] & 0xff) << 24 - this.endbit;
+		    if (bits > 32 && this.endbit != 0) {
+			ret |= (this.buffer[this.ptr + 4] & 0xff) << 32 - this.endbit;
+		    }
+		}
+	    }
+	}
+	return m & ret;
     }
 
     /**
@@ -179,10 +173,10 @@ public class Buffer {
      * @return
      */
     public int look1() {
-        if (this.endbyte >= this.storage) {
-            return -1;
-        }
-        return this.buffer[this.ptr] >> this.endbit & 1;
+	if (this.endbyte >= this.storage) {
+	    return -1;
+	}
+	return this.buffer[this.ptr] >> this.endbit & 1;
     }
 
     /**
@@ -190,23 +184,23 @@ public class Buffer {
      * @param bits
      */
     public void adv(final int bits1) {
-        int bits = bits1;
-        bits += this.endbit;
-        this.ptr += bits / 8;
-        this.endbyte += bits / 8;
-        this.endbit = bits & 7;
+	int bits = bits1;
+	bits += this.endbit;
+	this.ptr += bits / 8;
+	this.endbyte += bits / 8;
+	this.endbit = bits & 7;
     }
 
     /**
      *
      */
     public void adv1() {
-        ++this.endbit;
-        if (this.endbit > 7) {
-            this.endbit = 0;
-            this.ptr++;
-            this.endbyte++;
-        }
+	++this.endbit;
+	if (this.endbit > 7) {
+	    this.endbit = 0;
+	    this.ptr++;
+	    this.endbyte++;
+	}
     }
 
     /**
@@ -215,39 +209,37 @@ public class Buffer {
      * @return
      */
     public int read(final int bits1) {
-        int bits = bits1;
-        int ret;
-        final int m = Buffer.mask[bits];
-        bits += this.endbit;
-        if (this.endbyte + 4 >= this.storage) {
-            ret = -1;
-            if (this.endbyte + (bits - 1) / 8 >= this.storage) {
-                this.ptr += bits / 8;
-                this.endbyte += bits / 8;
-                this.endbit = bits & 7;
-                return ret;
-            }
-        }
-        ret = (this.buffer[this.ptr] & 0xff) >>> this.endbit;
-        if (bits > 8) {
-            ret |= (this.buffer[this.ptr + 1] & 0xff) << 8 - this.endbit;
-            if (bits > 16) {
-                ret |= (this.buffer[this.ptr + 2] & 0xff) << 16 - this.endbit;
-                if (bits > 24) {
-                    ret |= (this.buffer[this.ptr + 3] & 0xff) << 24
-                            - this.endbit;
-                    if (bits > 32 && this.endbit != 0) {
-                        ret |= (this.buffer[this.ptr + 4] & 0xff) << 32
-                                - this.endbit;
-                    }
-                }
-            }
-        }
-        ret &= m;
-        this.ptr += bits / 8;
-        this.endbyte += bits / 8;
-        this.endbit = bits & 7;
-        return ret;
+	int bits = bits1;
+	int ret;
+	final int m = Buffer.mask[bits];
+	bits += this.endbit;
+	if (this.endbyte + 4 >= this.storage) {
+	    ret = -1;
+	    if (this.endbyte + (bits - 1) / 8 >= this.storage) {
+		this.ptr += bits / 8;
+		this.endbyte += bits / 8;
+		this.endbit = bits & 7;
+		return ret;
+	    }
+	}
+	ret = (this.buffer[this.ptr] & 0xff) >>> this.endbit;
+	if (bits > 8) {
+	    ret |= (this.buffer[this.ptr + 1] & 0xff) << 8 - this.endbit;
+	    if (bits > 16) {
+		ret |= (this.buffer[this.ptr + 2] & 0xff) << 16 - this.endbit;
+		if (bits > 24) {
+		    ret |= (this.buffer[this.ptr + 3] & 0xff) << 24 - this.endbit;
+		    if (bits > 32 && this.endbit != 0) {
+			ret |= (this.buffer[this.ptr + 4] & 0xff) << 32 - this.endbit;
+		    }
+		}
+	    }
+	}
+	ret &= m;
+	this.ptr += bits / 8;
+	this.endbyte += bits / 8;
+	this.endbit = bits & 7;
+	return ret;
     }
 
     /**
@@ -256,39 +248,38 @@ public class Buffer {
      * @return
      */
     public int readB(final int bits1) {
-        int bits = bits1;
-        int ret;
-        final int m = 32 - bits;
-        bits += this.endbit;
-        if (this.endbyte + 4 >= this.storage) {
-            /* not the main path */
-            ret = -1;
-            if (this.endbyte * 8 + bits > this.storage * 8) {
-                this.ptr += bits / 8;
-                this.endbyte += bits / 8;
-                this.endbit = bits & 7;
-                return ret;
-            }
-        }
-        ret = (this.buffer[this.ptr] & 0xff) << 24 + this.endbit;
-        if (bits > 8) {
-            ret |= (this.buffer[this.ptr + 1] & 0xff) << 16 + this.endbit;
-            if (bits > 16) {
-                ret |= (this.buffer[this.ptr + 2] & 0xff) << 8 + this.endbit;
-                if (bits > 24) {
-                    ret |= (this.buffer[this.ptr + 3] & 0xff) << this.endbit;
-                    if (bits > 32 && this.endbit != 0) {
-                        ret |= (this.buffer[this.ptr + 4] & 0xff) >> 8
-                                - this.endbit;
-                    }
-                }
-            }
-        }
-        ret = ret >>> (m >> 1) >>> (m + 1 >> 1);
-        this.ptr += bits / 8;
-        this.endbyte += bits / 8;
-        this.endbit = bits & 7;
-        return ret;
+	int bits = bits1;
+	int ret;
+	final int m = 32 - bits;
+	bits += this.endbit;
+	if (this.endbyte + 4 >= this.storage) {
+	    /* not the main path */
+	    ret = -1;
+	    if (this.endbyte * 8 + bits > this.storage * 8) {
+		this.ptr += bits / 8;
+		this.endbyte += bits / 8;
+		this.endbit = bits & 7;
+		return ret;
+	    }
+	}
+	ret = (this.buffer[this.ptr] & 0xff) << 24 + this.endbit;
+	if (bits > 8) {
+	    ret |= (this.buffer[this.ptr + 1] & 0xff) << 16 + this.endbit;
+	    if (bits > 16) {
+		ret |= (this.buffer[this.ptr + 2] & 0xff) << 8 + this.endbit;
+		if (bits > 24) {
+		    ret |= (this.buffer[this.ptr + 3] & 0xff) << this.endbit;
+		    if (bits > 32 && this.endbit != 0) {
+			ret |= (this.buffer[this.ptr + 4] & 0xff) >> 8 - this.endbit;
+		    }
+		}
+	    }
+	}
+	ret = ret >>> (m >> 1) >>> (m + 1 >> 1);
+	this.ptr += bits / 8;
+	this.endbyte += bits / 8;
+	this.endbit = bits & 7;
+	return ret;
     }
 
     /**
@@ -296,25 +287,25 @@ public class Buffer {
      * @return
      */
     public int read1() {
-        int ret;
-        if (this.endbyte >= this.storage) {
-            ret = -1;
-            this.endbit++;
-            if (this.endbit > 7) {
-                this.endbit = 0;
-                this.ptr++;
-                this.endbyte++;
-            }
-            return ret;
-        }
-        ret = this.buffer[this.ptr] >> this.endbit & 1;
-        this.endbit++;
-        if (this.endbit > 7) {
-            this.endbit = 0;
-            this.ptr++;
-            this.endbyte++;
-        }
-        return ret;
+	int ret;
+	if (this.endbyte >= this.storage) {
+	    ret = -1;
+	    this.endbit++;
+	    if (this.endbit > 7) {
+		this.endbit = 0;
+		this.ptr++;
+		this.endbyte++;
+	    }
+	    return ret;
+	}
+	ret = this.buffer[this.ptr] >> this.endbit & 1;
+	this.endbit++;
+	if (this.endbit > 7) {
+	    this.endbit = 0;
+	    this.ptr++;
+	    this.endbyte++;
+	}
+	return ret;
     }
 
     /**
@@ -322,7 +313,7 @@ public class Buffer {
      * @return
      */
     public int bytes() {
-        return this.endbyte + (this.endbit + 7) / 8;
+	return this.endbyte + (this.endbit + 7) / 8;
     }
 
     /**
@@ -330,7 +321,7 @@ public class Buffer {
      * @return
      */
     public int bits() {
-        return this.endbyte * 8 + this.endbit;
+	return this.endbyte * 8 + this.endbit;
     }
 
     /**
@@ -338,7 +329,7 @@ public class Buffer {
      * @return
      */
     public byte[] buffer() {
-        return this.buffer;
+	return this.buffer;
     }
 
     /**
@@ -347,12 +338,12 @@ public class Buffer {
      * @return
      */
     public static int ilog(final int v1) {
-        int v = v1;
-        int ret = 0;
-        while (v > 0) {
-            ret++;
-            v >>>= 1;
-        }
-        return ret;
+	int v = v1;
+	int ret = 0;
+	while (v > 0) {
+	    ret++;
+	    v >>>= 1;
+	}
+	return ret;
     }
 }

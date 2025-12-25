@@ -19,10 +19,10 @@ public class MusicConstants {
 
     // Private constructor
     private MusicConstants() {
-        // Do nothing
+	// Do nothing
     }
 
     static String getMusicName(final int ID) {
-        return MusicConstants.MUSIC_NAMES[ID];
+	return MusicConstants.MUSIC_NAMES[ID];
     }
 }

@@ -11,29 +11,28 @@ import studio.ignitionigloogames.chrystalz.manager.string.StringManager;
 public class MonsterNames {
     // Private constructor
     private MonsterNames() {
-        // Do nothing
+	// Do nothing
     }
 
     public static final String getName(final int ID) {
-        final String tempMonID = Integer.toString(ID);
-        String monID;
-        if (tempMonID.length() == 1) {
-            monID = "0" + tempMonID;
-        } else {
-            monID = tempMonID;
-        }
-        return monID;
+	final String tempMonID = Integer.toString(ID);
+	String monID;
+	if (tempMonID.length() == 1) {
+	    monID = "0" + tempMonID;
+	} else {
+	    monID = tempMonID;
+	}
+	return monID;
     }
 
     public static final String getType(final int zoneID, final int ID) {
-        final String tempMonID = Integer.toString(ID);
-        String monID;
-        if (tempMonID.length() == 1) {
-            monID = "0" + tempMonID;
-        } else {
-            monID = tempMonID;
-        }
-        return ZoneNames.getName(zoneID) + " " + StringManager
-                .getLocalizedString(LocalizedFile.MONSTERS, monID);
+	final String tempMonID = Integer.toString(ID);
+	String monID;
+	if (tempMonID.length() == 1) {
+	    monID = "0" + tempMonID;
+	} else {
+	    monID = tempMonID;
+	}
+	return ZoneNames.getName(zoneID) + " " + StringManager.getLocalizedString(LocalizedFile.MONSTERS, monID);
     }
 }

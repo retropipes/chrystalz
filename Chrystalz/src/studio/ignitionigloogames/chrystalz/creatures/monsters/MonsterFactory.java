@@ -9,18 +9,18 @@ import studio.ignitionigloogames.chrystalz.creatures.AbstractCreature;
 
 public class MonsterFactory {
     private MonsterFactory() {
-        // Do nothing
+	// Do nothing
     }
 
     public static AbstractCreature getNewMonsterInstance() {
-        return new Monster();
+	return new Monster();
     }
 
     public static AbstractCreature getNewBossInstance() {
-        return new BossMonster();
+	return new BossMonster();
     }
 
     public static AbstractCreature getNewFinalBossInstance() {
-        return new FinalBossMonster();
+	return new FinalBossMonster();
     }
 }

@@ -44,143 +44,142 @@ public final class Application {
 
     // Constructors
     public Application() {
-        this.objects = new GameObjectList();
-        this.currentMode = Application.STATUS_NULL;
-        this.formerMode = Application.STATUS_NULL;
+	this.objects = new GameObjectList();
+	this.currentMode = Application.STATUS_NULL;
+	this.formerMode = Application.STATUS_NULL;
     }
 
     // Methods
     void postConstruct() {
-        // Create Managers
-        this.about = new AboutDialog(Application.getVersionString());
-        this.guiMgr = new GUIManager();
-        this.menuMgr = new MenuManager();
-        this.mapTurnBattle = new MapBattleLogic();
-        this.weapons = new Shop(ShopType.WEAPONS);
-        this.armor = new Shop(ShopType.ARMOR);
-        this.healer = new Shop(ShopType.HEALER);
-        this.regenerator = new Shop(ShopType.REGENERATOR);
-        this.spells = new Shop(ShopType.SPELLS);
-        // Cache Logo
-        this.guiMgr.updateLogo();
+	// Create Managers
+	this.about = new AboutDialog(Application.getVersionString());
+	this.guiMgr = new GUIManager();
+	this.menuMgr = new MenuManager();
+	this.mapTurnBattle = new MapBattleLogic();
+	this.weapons = new Shop(ShopType.WEAPONS);
+	this.armor = new Shop(ShopType.ARMOR);
+	this.healer = new Shop(ShopType.HEALER);
+	this.regenerator = new Shop(ShopType.REGENERATOR);
+	this.spells = new Shop(ShopType.SPELLS);
+	// Cache Logo
+	this.guiMgr.updateLogo();
     }
 
     public void setMode(final int newMode) {
-        this.formerMode = this.currentMode;
-        this.currentMode = newMode;
+	this.formerMode = this.currentMode;
+	this.currentMode = newMode;
     }
 
     public int getMode() {
-        return this.currentMode;
+	return this.currentMode;
     }
 
     public int getFormerMode() {
-        return this.formerMode;
+	return this.formerMode;
     }
 
     public boolean modeChanged() {
-        return this.formerMode != this.currentMode;
+	return this.formerMode != this.currentMode;
     }
 
     public void saveFormerMode() {
-        this.formerMode = this.currentMode;
+	this.formerMode = this.currentMode;
     }
 
     public void restoreFormerMode() {
-        this.currentMode = this.formerMode;
+	this.currentMode = this.formerMode;
     }
 
     public void showMessage(final String msg) {
-        if (this.currentMode == Application.STATUS_GAME) {
-            this.getGame().setStatusMessage(msg);
-        } else if (this.currentMode == Application.STATUS_BATTLE) {
-            this.getBattle().setStatusMessage(msg);
-        } else {
-            CommonDialogs.showDialog(msg);
-        }
+	if (this.currentMode == Application.STATUS_GAME) {
+	    this.getGame().setStatusMessage(msg);
+	} else if (this.currentMode == Application.STATUS_BATTLE) {
+	    this.getBattle().setStatusMessage(msg);
+	} else {
+	    CommonDialogs.showDialog(msg);
+	}
     }
 
     public MenuManager getMenuManager() {
-        return this.menuMgr;
+	return this.menuMgr;
     }
 
     public GUIManager getGUIManager() {
-        return this.guiMgr;
+	return this.guiMgr;
     }
 
     public GameLogic getGame() {
-        if (this.gameMgr == null) {
-            this.gameMgr = new GameLogic();
-        }
-        return this.gameMgr;
+	if (this.gameMgr == null) {
+	    this.gameMgr = new GameLogic();
+	}
+	return this.gameMgr;
     }
 
     public DungeonManager getDungeonManager() {
-        if (this.mazeMgr == null) {
-            this.mazeMgr = new DungeonManager();
-        }
-        return this.mazeMgr;
+	if (this.mazeMgr == null) {
+	    this.mazeMgr = new DungeonManager();
+	}
+	return this.mazeMgr;
     }
 
     public AboutDialog getAboutDialog() {
-        return this.about;
+	return this.about;
     }
 
     public static BufferedImageIcon getMicroLogo() {
-        return LogoManager.getMicroLogo();
+	return LogoManager.getMicroLogo();
     }
 
     public static Image getIconLogo() {
-        return LogoManager.getIconLogo();
+	return LogoManager.getIconLogo();
     }
 
     private static String getVersionString() {
-        return Application.VERSION_MAJOR + "." + Application.VERSION_MINOR + "."
-                + Application.VERSION_BUGFIX;
+	return Application.VERSION_MAJOR + "." + Application.VERSION_MINOR + "." + Application.VERSION_BUGFIX;
     }
 
     public JFrame getOutputFrame() {
-        if (this.getMode() == Application.STATUS_PREFS) {
-            return PreferencesManager.getPrefFrame();
-        } else if (this.getMode() == Application.STATUS_GUI) {
-            return this.getGUIManager().getGUIFrame();
-        } else if (this.getMode() == Application.STATUS_GAME) {
-            return this.getGame().getOutputFrame();
-        } else if (this.getMode() == Application.STATUS_BATTLE) {
-            return this.getBattle().getOutputFrame();
-        } else {
-            return null;
-        }
+	if (this.getMode() == Application.STATUS_PREFS) {
+	    return PreferencesManager.getPrefFrame();
+	} else if (this.getMode() == Application.STATUS_GUI) {
+	    return this.getGUIManager().getGUIFrame();
+	} else if (this.getMode() == Application.STATUS_GAME) {
+	    return this.getGame().getOutputFrame();
+	} else if (this.getMode() == Application.STATUS_BATTLE) {
+	    return this.getBattle().getOutputFrame();
+	} else {
+	    return null;
+	}
     }
 
     public GameObjectList getObjects() {
-        return this.objects;
+	return this.objects;
     }
 
     public Shop getGenericShop(final ShopType shopType) {
-        this.getGame().stopMovement();
-        switch (shopType) {
-        case ARMOR:
-            return this.armor;
-        case HEALER:
-            return this.healer;
-        case REGENERATOR:
-            return this.regenerator;
-        case SPELLS:
-            return this.spells;
-        case WEAPONS:
-            return this.weapons;
-        default:
-            // Invalid shop type
-            return null;
-        }
+	this.getGame().stopMovement();
+	switch (shopType) {
+	case ARMOR:
+	    return this.armor;
+	case HEALER:
+	    return this.healer;
+	case REGENERATOR:
+	    return this.regenerator;
+	case SPELLS:
+	    return this.spells;
+	case WEAPONS:
+	    return this.weapons;
+	default:
+	    // Invalid shop type
+	    return null;
+	}
     }
 
     public AbstractBattle getBattle() {
-        return this.mapTurnBattle;
+	return this.mapTurnBattle;
     }
 
     public void resetBattleGUI() {
-        this.mapTurnBattle.resetGUI();
+	this.mapTurnBattle.resetGUI();
     }
 }

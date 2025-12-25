@@ -39,10 +39,8 @@ import com.github.trilarion.sound.vorbis.jcraft.jorbis.Info;
 /**
  * This class implements the Vorbis decoding.
  */
-public class DecodedVorbisAudioInputStream
-        extends AsynchronousFilteredAudioInputStream {
-    private static final Logger LOG = Logger
-            .getLogger(DecodedVorbisAudioInputStream.class.getName());
+public class DecodedVorbisAudioInputStream extends AsynchronousFilteredAudioInputStream {
+    private static final Logger LOG = Logger.getLogger(DecodedVorbisAudioInputStream.class.getName());
     private final InputStream oggBitStream_;
     private SyncState oggSyncState_ = null;
     private StreamState oggStreamState_ = null;
@@ -80,31 +78,30 @@ public class DecodedVorbisAudioInputStream
      * @param outputFormat
      * @param bitStream
      */
-    public DecodedVorbisAudioInputStream(final AudioFormat outputFormat,
-            final AudioInputStream bitStream) {
-        super(outputFormat, -1);
-        this.oggBitStream_ = bitStream;
-        this.init_jorbis();
-        this.index = 0;
-        this.playState = DecodedVorbisAudioInputStream.playState_NeedHeaders;
+    public DecodedVorbisAudioInputStream(final AudioFormat outputFormat, final AudioInputStream bitStream) {
+	super(outputFormat, -1);
+	this.oggBitStream_ = bitStream;
+	this.init_jorbis();
+	this.index = 0;
+	this.playState = DecodedVorbisAudioInputStream.playState_NeedHeaders;
     }
 
     /**
      * Initializes all the jOrbis and jOgg vars that are used for song playback.
      */
     private void init_jorbis() {
-        this.oggSyncState_ = new SyncState();
-        this.oggStreamState_ = new StreamState();
-        this.oggPage_ = new Page();
-        this.oggPacket_ = new Packet();
-        this.vorbisInfo = new Info();
-        this.vorbisComment = new Comment();
-        this.vorbisDspState = new DspState();
-        this.vorbisBlock = new Block(this.vorbisDspState);
-        this.buffer = null;
-        this.bytes = 0;
-        this.currentBytes = 0L;
-        this.oggSyncState_.init();
+	this.oggSyncState_ = new SyncState();
+	this.oggStreamState_ = new StreamState();
+	this.oggPage_ = new Page();
+	this.oggPacket_ = new Packet();
+	this.vorbisInfo = new Info();
+	this.vorbisComment = new Comment();
+	this.vorbisDspState = new DspState();
+	this.vorbisBlock = new Block(this.vorbisDspState);
+	this.buffer = null;
+	this.bytes = 0;
+	this.currentBytes = 0L;
+	this.oggSyncState_.init();
     }
 
     /**
@@ -112,377 +109,332 @@ public class DecodedVorbisAudioInputStream
      */
     @Override
     public void dataReady() {
-        switch (this.playState) {
-        case playState_NeedHeaders:
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                    "playState = playState_NeedHeaders");
-            break;
-        case playState_ReadData:
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                    "playState = playState_ReadData");
-            break;
-        case playState_WriteData:
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                    "playState = playState_WriteData");
-            break;
-        case playState_Done:
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                    "playState = playState_Done");
-            break;
-        case playState_BufferFull:
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                    "playState = playState_BufferFull");
-            break;
-        case playState_Corrupt:
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                    "playState = playState_Corrupt");
-            break;
-        default:
-            break;
-        }
-        // This code was developed by the jCraft group, as JOrbisPlayer.java,
-        // slightly
-        // modified by jOggPlayer developer and adapted by JavaZOOM to suit the
-        // JavaSound
-        // SPI. Then further modified by Tom Kimpton to correctly play ogg files
-        // that
-        // would hang the player.
-        switch (this.playState) {
-        case playState_NeedHeaders:
-            try {
-                // Headers (+ Comments).
-                this.readHeaders();
-            } catch (final IOException ioe) {
-                this.playState = DecodedVorbisAudioInputStream.playState_Corrupt;
-                return;
-            }
-            this.playState = DecodedVorbisAudioInputStream.playState_ReadData;
-            break;
-        case playState_ReadData:
-            int result;
-            this.index = this.oggSyncState_.buffer(this.bufferSize_);
-            this.buffer = this.oggSyncState_.data;
-            this.bytes = this.readFromStream(this.buffer, this.index,
-                    this.bufferSize_);
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "More data : {0}",
-                    this.bytes);
-            if (this.bytes == -1) {
-                this.playState = DecodedVorbisAudioInputStream.playState_Done;
-                DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                        "Ogg Stream empty. Settings playState to playState_Done.");
-                break;
-            } else {
-                this.oggSyncState_.wrote(this.bytes);
-                if (this.bytes == 0) {
-                    if (this.oggPage_.eos() != 0
-                            || this.oggStreamState_.e_o_s != 0
-                            || this.oggPacket_.e_o_s != 0) {
-                        DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                                "oggSyncState wrote 0 bytes: settings playState to playState_Done.");
-                        this.playState = DecodedVorbisAudioInputStream.playState_Done;
-                    }
-                    DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                            "oggSyncState wrote 0 bytes: but stream not yet empty.");
-                    break;
-                }
-            }
-            result = this.oggSyncState_.pageout(this.oggPage_);
-            if (result == 0) {
-                DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                        "Setting playState to playState_ReadData.");
-                this.playState = DecodedVorbisAudioInputStream.playState_ReadData;
-                break;
-            } // need more data
-            if (result == -1) { // missing or corrupt data at this page position
-                DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                        "Corrupt or missing data in bitstream; setting playState to playState_ReadData");
-                this.playState = DecodedVorbisAudioInputStream.playState_ReadData;
-                break;
-            }
-            this.oggStreamState_.pagein(this.oggPage_);
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                    "Setting playState to playState_WriteData.");
-            this.playState = DecodedVorbisAudioInputStream.playState_WriteData;
-            break;
-        case playState_WriteData:
-            // Decoding !
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Decoding");
-            label: while (true) {
-                result = this.oggStreamState_.packetout(this.oggPacket_);
-                switch (result) {
-                case 0:
-                    DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                            "Packetout returned 0, going to read state.");
-                    this.playState = DecodedVorbisAudioInputStream.playState_ReadData;
-                    break label;
-                case -1:
-                    // missing or corrupt data at this page position
-                    // no reason to complain; already complained above
-                    DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                            "Corrupt or missing data in packetout bitstream; going to read state...");
-                    // playState = playState_ReadData;
-                    // break;
-                    // continue;
-                    break;
-                default:
-                    // we have a packet. Decode it
-                    if (this.vorbisBlock.synthesis(this.oggPacket_) == 0) { // test
-                                                                            // for
-                                                                            // success!
-                        this.vorbisDspState.synthesis_blockin(this.vorbisBlock);
-                    } else {
-                        // if(TDebug.TraceAudioConverter)
-                        // TDebug.out("vorbisBlock.synthesis() returned !0,
-                        // going to read state");
-                        DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                                "VorbisBlock.synthesis() returned !0, continuing.");
-                        continue;
-                    }
-                    this.outputSamples();
-                    if (this.playState == DecodedVorbisAudioInputStream.playState_BufferFull) {
-                        return;
-                    }
-                    break;
-                }
-            } // while(true)
-            if (this.oggPage_.eos() != 0) {
-                DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                        "Settings playState to playState_Done.");
-                this.playState = DecodedVorbisAudioInputStream.playState_Done;
-            }
-            break;
-        case playState_BufferFull:
-            this.continueFromBufferFull();
-            break;
-        case playState_Corrupt:
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Corrupt Song.");
-            // drop through to playState_Done...
-            // $FALL-THROUGH$
-        case playState_Done:
-            this.oggStreamState_.clear();
-            this.vorbisBlock.clear();
-            this.vorbisDspState.clear();
-            this.vorbisInfo.clear();
-            this.oggSyncState_.clear();
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Done Song.");
-            try {
-                if (this.oggBitStream_ != null) {
-                    this.oggBitStream_.close();
-                }
-                this.getCircularBuffer().close();
-            } catch (final Exception e) {
-                DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                        e.getMessage());
-            }
-            break;
-        default:
-            break;
-        } // switch
+	switch (this.playState) {
+	case playState_NeedHeaders:
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "playState = playState_NeedHeaders");
+	    break;
+	case playState_ReadData:
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "playState = playState_ReadData");
+	    break;
+	case playState_WriteData:
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "playState = playState_WriteData");
+	    break;
+	case playState_Done:
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "playState = playState_Done");
+	    break;
+	case playState_BufferFull:
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "playState = playState_BufferFull");
+	    break;
+	case playState_Corrupt:
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "playState = playState_Corrupt");
+	    break;
+	default:
+	    break;
+	}
+	// This code was developed by the jCraft group, as JOrbisPlayer.java,
+	// slightly
+	// modified by jOggPlayer developer and adapted by JavaZOOM to suit the
+	// JavaSound
+	// SPI. Then further modified by Tom Kimpton to correctly play ogg files
+	// that
+	// would hang the player.
+	switch (this.playState) {
+	case playState_NeedHeaders:
+	    try {
+		// Headers (+ Comments).
+		this.readHeaders();
+	    } catch (final IOException ioe) {
+		this.playState = DecodedVorbisAudioInputStream.playState_Corrupt;
+		return;
+	    }
+	    this.playState = DecodedVorbisAudioInputStream.playState_ReadData;
+	    break;
+	case playState_ReadData:
+	    int result;
+	    this.index = this.oggSyncState_.buffer(this.bufferSize_);
+	    this.buffer = this.oggSyncState_.data;
+	    this.bytes = this.readFromStream(this.buffer, this.index, this.bufferSize_);
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "More data : {0}", this.bytes);
+	    if (this.bytes == -1) {
+		this.playState = DecodedVorbisAudioInputStream.playState_Done;
+		DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
+			"Ogg Stream empty. Settings playState to playState_Done.");
+		break;
+	    } else {
+		this.oggSyncState_.wrote(this.bytes);
+		if (this.bytes == 0) {
+		    if (this.oggPage_.eos() != 0 || this.oggStreamState_.e_o_s != 0 || this.oggPacket_.e_o_s != 0) {
+			DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
+				"oggSyncState wrote 0 bytes: settings playState to playState_Done.");
+			this.playState = DecodedVorbisAudioInputStream.playState_Done;
+		    }
+		    DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
+			    "oggSyncState wrote 0 bytes: but stream not yet empty.");
+		    break;
+		}
+	    }
+	    result = this.oggSyncState_.pageout(this.oggPage_);
+	    if (result == 0) {
+		DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Setting playState to playState_ReadData.");
+		this.playState = DecodedVorbisAudioInputStream.playState_ReadData;
+		break;
+	    } // need more data
+	    if (result == -1) { // missing or corrupt data at this page position
+		DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
+			"Corrupt or missing data in bitstream; setting playState to playState_ReadData");
+		this.playState = DecodedVorbisAudioInputStream.playState_ReadData;
+		break;
+	    }
+	    this.oggStreamState_.pagein(this.oggPage_);
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Setting playState to playState_WriteData.");
+	    this.playState = DecodedVorbisAudioInputStream.playState_WriteData;
+	    break;
+	case playState_WriteData:
+	    // Decoding !
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Decoding");
+	    label: while (true) {
+		result = this.oggStreamState_.packetout(this.oggPacket_);
+		switch (result) {
+		case 0:
+		    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Packetout returned 0, going to read state.");
+		    this.playState = DecodedVorbisAudioInputStream.playState_ReadData;
+		    break label;
+		case -1:
+		    // missing or corrupt data at this page position
+		    // no reason to complain; already complained above
+		    DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
+			    "Corrupt or missing data in packetout bitstream; going to read state...");
+		    // playState = playState_ReadData;
+		    // break;
+		    // continue;
+		    break;
+		default:
+		    // we have a packet. Decode it
+		    if (this.vorbisBlock.synthesis(this.oggPacket_) == 0) { // test
+									    // for
+									    // success!
+			this.vorbisDspState.synthesis_blockin(this.vorbisBlock);
+		    } else {
+			// if(TDebug.TraceAudioConverter)
+			// TDebug.out("vorbisBlock.synthesis() returned !0,
+			// going to read state");
+			DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
+				"VorbisBlock.synthesis() returned !0, continuing.");
+			continue;
+		    }
+		    this.outputSamples();
+		    if (this.playState == DecodedVorbisAudioInputStream.playState_BufferFull) {
+			return;
+		    }
+		    break;
+		}
+	    } // while(true)
+	    if (this.oggPage_.eos() != 0) {
+		DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Settings playState to playState_Done.");
+		this.playState = DecodedVorbisAudioInputStream.playState_Done;
+	    }
+	    break;
+	case playState_BufferFull:
+	    this.continueFromBufferFull();
+	    break;
+	case playState_Corrupt:
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Corrupt Song.");
+	    // drop through to playState_Done...
+	    // $FALL-THROUGH$
+	case playState_Done:
+	    this.oggStreamState_.clear();
+	    this.vorbisBlock.clear();
+	    this.vorbisDspState.clear();
+	    this.vorbisInfo.clear();
+	    this.oggSyncState_.clear();
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Done Song.");
+	    try {
+		if (this.oggBitStream_ != null) {
+		    this.oggBitStream_.close();
+		}
+		this.getCircularBuffer().close();
+	    } catch (final Exception e) {
+		DecodedVorbisAudioInputStream.LOG.log(Level.FINE, e.getMessage());
+	    }
+	    break;
+	default:
+	    break;
+	} // switch
     }
 
     /**
-     * This routine was extracted so that when the output buffer fills up, we
-     * can break out of the loop, let the music channel drain, then continue
-     * from where we were.
+     * This routine was extracted so that when the output buffer fills up, we can
+     * break out of the loop, let the music channel drain, then continue from where
+     * we were.
      */
     private void outputSamples() {
-        int samples;
-        while ((samples = this.vorbisDspState.synthesis_pcmout(this._pcmf,
-                this._index)) > 0) {
-            final float[][] pcmf = this._pcmf[0];
-            this.bout = samples < this.convsize ? samples : this.convsize;
-            // convert doubles to 16 bit signed ints (host order) and
-            // interleave
-            for (this.i = 0; this.i < this.vorbisInfo.channels; this.i++) {
-                int pointer = this.i * 2;
-                // int ptr=i;
-                final int mono = this._index[this.i];
-                for (int j = 0; j < this.bout; j++) {
-                    final double fVal = pcmf[this.i][mono + j] * 32767.;
-                    int val = (int) fVal;
-                    if (val > 32767) {
-                        val = 32767;
-                    }
-                    if (val < -32768) {
-                        val = -32768;
-                    }
-                    if (val < 0) {
-                        val = val | 0x8000;
-                    }
-                    this.convbuffer[pointer] = (byte) val;
-                    this.convbuffer[pointer + 1] = (byte) (val >>> 8);
-                    pointer += 2 * this.vorbisInfo.channels;
-                }
-            }
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                    "about to write: {0}",
-                    2 * this.vorbisInfo.channels * this.bout);
-            if (this.getCircularBuffer().availableWrite() < 2
-                    * this.vorbisInfo.channels * this.bout) {
-                DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                        "Too much data in this data packet, better return, let the channel drain, and try again...");
-                this.playState = DecodedVorbisAudioInputStream.playState_BufferFull;
-                return;
-            }
-            this.getCircularBuffer().write(this.convbuffer, 0,
-                    2 * this.vorbisInfo.channels * this.bout);
-            if (this.bytes < this.bufferSize_) {
-                DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                        "Finished with final buffer of music?");
-            }
-            if (this.vorbisDspState.synthesis_read(this.bout) != 0) {
-                DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                        "VorbisDspState.synthesis_read returned -1.");
-            }
-        } // while(samples...)
-        this.playState = DecodedVorbisAudioInputStream.playState_ReadData;
+	int samples;
+	while ((samples = this.vorbisDspState.synthesis_pcmout(this._pcmf, this._index)) > 0) {
+	    final float[][] pcmf = this._pcmf[0];
+	    this.bout = samples < this.convsize ? samples : this.convsize;
+	    // convert doubles to 16 bit signed ints (host order) and
+	    // interleave
+	    for (this.i = 0; this.i < this.vorbisInfo.channels; this.i++) {
+		int pointer = this.i * 2;
+		// int ptr=i;
+		final int mono = this._index[this.i];
+		for (int j = 0; j < this.bout; j++) {
+		    final double fVal = pcmf[this.i][mono + j] * 32767.;
+		    int val = (int) fVal;
+		    if (val > 32767) {
+			val = 32767;
+		    }
+		    if (val < -32768) {
+			val = -32768;
+		    }
+		    if (val < 0) {
+			val = val | 0x8000;
+		    }
+		    this.convbuffer[pointer] = (byte) val;
+		    this.convbuffer[pointer + 1] = (byte) (val >>> 8);
+		    pointer += 2 * this.vorbisInfo.channels;
+		}
+	    }
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "about to write: {0}",
+		    2 * this.vorbisInfo.channels * this.bout);
+	    if (this.getCircularBuffer().availableWrite() < 2 * this.vorbisInfo.channels * this.bout) {
+		DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
+			"Too much data in this data packet, better return, let the channel drain, and try again...");
+		this.playState = DecodedVorbisAudioInputStream.playState_BufferFull;
+		return;
+	    }
+	    this.getCircularBuffer().write(this.convbuffer, 0, 2 * this.vorbisInfo.channels * this.bout);
+	    if (this.bytes < this.bufferSize_) {
+		DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Finished with final buffer of music?");
+	    }
+	    if (this.vorbisDspState.synthesis_read(this.bout) != 0) {
+		DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "VorbisDspState.synthesis_read returned -1.");
+	    }
+	} // while(samples...)
+	this.playState = DecodedVorbisAudioInputStream.playState_ReadData;
     }
 
     private void continueFromBufferFull() {
-        if (this.getCircularBuffer().availableWrite() < 2
-                * this.vorbisInfo.channels * this.bout) {
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                    "Too much data in this data packet, better return, let the channel drain, and try again...");
-            // Don't change play state.
-            return;
-        }
-        this.getCircularBuffer().write(this.convbuffer, 0,
-                2 * this.vorbisInfo.channels * this.bout);
-        // Don't change play state. Let outputSamples change play state, if
-        // necessary.
-        this.outputSamples();
+	if (this.getCircularBuffer().availableWrite() < 2 * this.vorbisInfo.channels * this.bout) {
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
+		    "Too much data in this data packet, better return, let the channel drain, and try again...");
+	    // Don't change play state.
+	    return;
+	}
+	this.getCircularBuffer().write(this.convbuffer, 0, 2 * this.vorbisInfo.channels * this.bout);
+	// Don't change play state. Let outputSamples change play state, if
+	// necessary.
+	this.outputSamples();
     }
 
     /**
      * Reads headers and comments.
      */
     private void readHeaders() throws IOException {
-        DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "readHeaders(");
-        this.index = this.oggSyncState_.buffer(this.bufferSize_);
-        this.buffer = this.oggSyncState_.data;
-        this.bytes = this.readFromStream(this.buffer, this.index,
-                this.bufferSize_);
-        if (this.bytes == -1) {
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                    "Cannot get any data from selected Ogg bitstream.");
-            throw new IOException(
-                    "Cannot get any data from selected Ogg bitstream.");
-        }
-        this.oggSyncState_.wrote(this.bytes);
-        if (this.oggSyncState_.pageout(this.oggPage_) != 1) {
-            if (this.bytes < this.bufferSize_) {
-                throw new IOException("EOF");
-            }
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                    "Input does not appear to be an Ogg bitstream.");
-            throw new IOException(
-                    "Input does not appear to be an Ogg bitstream.");
-        }
-        this.oggStreamState_.init(this.oggPage_.serialno());
-        this.vorbisInfo.init();
-        this.vorbisComment.init();
-        if (this.oggStreamState_.pagein(this.oggPage_) < 0) {
-            // error; stream version mismatch perhaps
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                    "Error reading first page of Ogg bitstream data.");
-            throw new IOException(
-                    "Error reading first page of Ogg bitstream data.");
-        }
-        if (this.oggStreamState_.packetout(this.oggPacket_) != 1) {
-            // no page? must not be vorbis
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                    "Error reading initial header packet.");
-            throw new IOException("Error reading initial header packet.");
-        }
-        if (this.vorbisInfo.synthesis_headerin(this.vorbisComment,
-                this.oggPacket_) < 0) {
-            // error case; not a vorbis header
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                    "This Ogg bitstream does not contain Vorbis audio data.");
-            throw new IOException(
-                    "This Ogg bitstream does not contain Vorbis audio data.");
-        }
-        // int i = 0;
-        this.i = 0;
-        while (this.i < 2) {
-            while (this.i < 2) {
-                int result = this.oggSyncState_.pageout(this.oggPage_);
-                if (result == 0) {
-                    break;
-                } // Need more data
-                if (result == 1) {
-                    this.oggStreamState_.pagein(this.oggPage_);
-                    while (this.i < 2) {
-                        result = this.oggStreamState_
-                                .packetout(this.oggPacket_);
-                        if (result == 0) {
-                            break;
-                        }
-                        if (result == -1) {
-                            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                                    "Corrupt secondary header.  Exiting.");
-                            throw new IOException(
-                                    "Corrupt secondary header.  Exiting.");
-                        }
-                        this.vorbisInfo.synthesis_headerin(this.vorbisComment,
-                                this.oggPacket_);
-                        this.i++;
-                    }
-                }
-            }
-            this.index = this.oggSyncState_.buffer(this.bufferSize_);
-            this.buffer = this.oggSyncState_.data;
-            this.bytes = this.readFromStream(this.buffer, this.index,
-                    this.bufferSize_);
-            if (this.bytes == -1) {
-                break;
-            }
-            if (this.bytes == 0 && this.i < 2) {
-                DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                        "End of file before finding all Vorbis headers!");
-                throw new IOException(
-                        "End of file before finding all Vorbis  headers!");
-            }
-            this.oggSyncState_.wrote(this.bytes);
-        }
-        final byte[][] ptr = this.vorbisComment.user_comments;
-        for (final byte[] ptr1 : ptr) {
-            if (ptr1 == null) {
-                break;
-            }
-            final String currComment = new String(ptr1, 0, ptr1.length - 1,
-                    Charset.forName("US-ASCII")).trim();
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Comment: {0}",
-                    currComment);
-        }
-        this.convsize = this.bufferSize_ / this.vorbisInfo.channels;
-        this.vorbisDspState.synthesis_init(this.vorbisInfo);
-        this.vorbisBlock.init(this.vorbisDspState);
-        this._pcmf = new float[1][][];
-        this._index = new int[this.vorbisInfo.channels];
+	DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "readHeaders(");
+	this.index = this.oggSyncState_.buffer(this.bufferSize_);
+	this.buffer = this.oggSyncState_.data;
+	this.bytes = this.readFromStream(this.buffer, this.index, this.bufferSize_);
+	if (this.bytes == -1) {
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Cannot get any data from selected Ogg bitstream.");
+	    throw new IOException("Cannot get any data from selected Ogg bitstream.");
+	}
+	this.oggSyncState_.wrote(this.bytes);
+	if (this.oggSyncState_.pageout(this.oggPage_) != 1) {
+	    if (this.bytes < this.bufferSize_) {
+		throw new IOException("EOF");
+	    }
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Input does not appear to be an Ogg bitstream.");
+	    throw new IOException("Input does not appear to be an Ogg bitstream.");
+	}
+	this.oggStreamState_.init(this.oggPage_.serialno());
+	this.vorbisInfo.init();
+	this.vorbisComment.init();
+	if (this.oggStreamState_.pagein(this.oggPage_) < 0) {
+	    // error; stream version mismatch perhaps
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Error reading first page of Ogg bitstream data.");
+	    throw new IOException("Error reading first page of Ogg bitstream data.");
+	}
+	if (this.oggStreamState_.packetout(this.oggPacket_) != 1) {
+	    // no page? must not be vorbis
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Error reading initial header packet.");
+	    throw new IOException("Error reading initial header packet.");
+	}
+	if (this.vorbisInfo.synthesis_headerin(this.vorbisComment, this.oggPacket_) < 0) {
+	    // error case; not a vorbis header
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "This Ogg bitstream does not contain Vorbis audio data.");
+	    throw new IOException("This Ogg bitstream does not contain Vorbis audio data.");
+	}
+	// int i = 0;
+	this.i = 0;
+	while (this.i < 2) {
+	    while (this.i < 2) {
+		int result = this.oggSyncState_.pageout(this.oggPage_);
+		if (result == 0) {
+		    break;
+		} // Need more data
+		if (result == 1) {
+		    this.oggStreamState_.pagein(this.oggPage_);
+		    while (this.i < 2) {
+			result = this.oggStreamState_.packetout(this.oggPacket_);
+			if (result == 0) {
+			    break;
+			}
+			if (result == -1) {
+			    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Corrupt secondary header.  Exiting.");
+			    throw new IOException("Corrupt secondary header.  Exiting.");
+			}
+			this.vorbisInfo.synthesis_headerin(this.vorbisComment, this.oggPacket_);
+			this.i++;
+		    }
+		}
+	    }
+	    this.index = this.oggSyncState_.buffer(this.bufferSize_);
+	    this.buffer = this.oggSyncState_.data;
+	    this.bytes = this.readFromStream(this.buffer, this.index, this.bufferSize_);
+	    if (this.bytes == -1) {
+		break;
+	    }
+	    if (this.bytes == 0 && this.i < 2) {
+		DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "End of file before finding all Vorbis headers!");
+		throw new IOException("End of file before finding all Vorbis  headers!");
+	    }
+	    this.oggSyncState_.wrote(this.bytes);
+	}
+	final byte[][] ptr = this.vorbisComment.user_comments;
+	for (final byte[] ptr1 : ptr) {
+	    if (ptr1 == null) {
+		break;
+	    }
+	    final String currComment = new String(ptr1, 0, ptr1.length - 1, Charset.forName("US-ASCII")).trim();
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Comment: {0}", currComment);
+	}
+	this.convsize = this.bufferSize_ / this.vorbisInfo.channels;
+	this.vorbisDspState.synthesis_init(this.vorbisInfo);
+	this.vorbisBlock.init(this.vorbisDspState);
+	this._pcmf = new float[1][][];
+	this._index = new int[this.vorbisInfo.channels];
     }
 
     /**
-     * Reads from the oggBitStream_ a specified number of Bytes(bufferSize_)
-     * worth starting at index and puts them in the specified buffer[].
+     * Reads from the oggBitStream_ a specified number of Bytes(bufferSize_) worth
+     * starting at index and puts them in the specified buffer[].
      *
      * @param buffer1
      * @param index1
      * @param bufferSize_1
      * @return the number of bytes read or -1 if error.
      */
-    private int readFromStream(final byte[] buffer1, final int index1,
-            final int bufferSize_1) {
-        int bytes1;
-        try {
-            bytes1 = this.oggBitStream_.read(buffer1, index1, bufferSize_1);
-        } catch (final Exception e) {
-            DecodedVorbisAudioInputStream.LOG.log(Level.FINE,
-                    "Cannot Read Selected Song");
-            bytes1 = -1;
-        }
-        this.currentBytes = this.currentBytes + bytes1;
-        return bytes1;
+    private int readFromStream(final byte[] buffer1, final int index1, final int bufferSize_1) {
+	int bytes1;
+	try {
+	    bytes1 = this.oggBitStream_.read(buffer1, index1, bufferSize_1);
+	} catch (final Exception e) {
+	    DecodedVorbisAudioInputStream.LOG.log(Level.FINE, "Cannot Read Selected Song");
+	    bytes1 = -1;
+	}
+	this.currentBytes = this.currentBytes + bytes1;
+	return bytes1;
     }
 
     /**
@@ -492,7 +444,7 @@ public class DecodedVorbisAudioInputStream
      */
     @Override
     public void close() throws IOException {
-        super.close();
-        this.oggBitStream_.close();
+	super.close();
+	this.oggBitStream_.close();
     }
 }

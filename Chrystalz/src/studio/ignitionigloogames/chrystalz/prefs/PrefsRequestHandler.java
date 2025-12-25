@@ -9,11 +9,11 @@ import java.awt.desktop.PreferencesHandler;
 
 public class PrefsRequestHandler implements PreferencesHandler {
     public PrefsRequestHandler() {
-        // Do nothing
+	// Do nothing
     }
 
     @Override
     public void handlePreferences(final PreferencesEvent pe) {
-        PreferencesManager.showPrefs();
+	PreferencesManager.showPrefs();
     }
 }

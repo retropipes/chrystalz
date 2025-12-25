@@ -23,8 +23,7 @@ import com.github.trilarion.sound.vorbis.jcraft.jogg.Buffer;
  *
  */
 abstract class FuncResidue {
-    public static FuncResidue[] residue_P = { new Residue0(), new Residue1(),
-            new Residue2() };
+    public static FuncResidue[] residue_P = { new Residue0(), new Residue1(), new Residue2() };
 
     abstract void pack(Object vr, Buffer opb);
 
@@ -36,6 +35,5 @@ abstract class FuncResidue {
 
     abstract void free_look(Object i);
 
-    abstract int inverse(Block vb, Object vl, float[][] in, int[] nonzero,
-            int ch);
+    abstract int inverse(Block vb, Object vl, float[][] in, int[] nonzero, int ch);
 }

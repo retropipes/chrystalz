@@ -12,18 +12,16 @@ import studio.ignitionigloogames.chrystalz.names.ZoneNames;
 public class ArmorConstants {
     // Private Constructor
     private ArmorConstants() {
-        // Do nothing
+	// Do nothing
     }
 
     public static final int TYPE_COUNT = 6;
 
     public static synchronized String[] getArmorChoices() {
-        return StringManager.getAllLocalizedStrings(LocalizedFile.ARMOR_TYPES,
-                6);
+	return StringManager.getAllLocalizedStrings(LocalizedFile.ARMOR_TYPES, 6);
     }
 
     public static synchronized String getArmor(final int index) {
-        return StringManager.getLocalizedString(LocalizedFile.ARMOR_TYPES,
-                ZoneNames.getZoneNumber(index));
+	return StringManager.getLocalizedString(LocalizedFile.ARMOR_TYPES, ZoneNames.getZoneNumber(index));
     }
 }

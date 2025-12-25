@@ -71,10 +71,10 @@ public class SoundConstants {
 
     // Private constructor
     private SoundConstants() {
-        // Do nothing
+	// Do nothing
     }
 
     static String getSoundName(final int ID) {
-        return SoundConstants.NAMES[ID];
+	return SoundConstants.NAMES[ID];
     }
 }

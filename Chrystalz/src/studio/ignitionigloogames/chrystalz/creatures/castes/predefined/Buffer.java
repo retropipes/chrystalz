@@ -10,6 +10,6 @@ import studio.ignitionigloogames.chrystalz.creatures.castes.CasteConstants;
 
 public class Buffer extends Caste {
     public Buffer() {
-        super(CasteConstants.CASTE_BUFFER);
+	super(CasteConstants.CASTE_BUFFER);
     }
 }

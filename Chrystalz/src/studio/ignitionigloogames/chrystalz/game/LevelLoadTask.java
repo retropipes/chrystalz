@@ -24,39 +24,38 @@ public class LevelLoadTask extends Thread {
 
     // Constructors
     public LevelLoadTask(final int offset) {
-        this.level = offset;
-        this.setName("Level Loader");
-        this.loadFrame = new JFrame("Loading...");
-        this.loadFrame.setIconImage(LogoManager.getIconLogo());
-        final JProgressBar loadBar = new JProgressBar();
-        loadBar.setIndeterminate(true);
-        this.loadFrame.getContentPane().add(loadBar);
-        this.loadFrame.setResizable(false);
-        this.loadFrame
-                .setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
-        this.loadFrame.pack();
+	this.level = offset;
+	this.setName("Level Loader");
+	this.loadFrame = new JFrame("Loading...");
+	this.loadFrame.setIconImage(LogoManager.getIconLogo());
+	final JProgressBar loadBar = new JProgressBar();
+	loadBar.setIndeterminate(true);
+	this.loadFrame.getContentPane().add(loadBar);
+	this.loadFrame.setResizable(false);
+	this.loadFrame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+	this.loadFrame.pack();
     }
 
     // Methods
     @Override
     public void run() {
-        try {
-            this.loadFrame.setVisible(true);
-            final Application app = Chrystalz.getApplication();
-            final Dungeon gameDungeon = app.getDungeonManager().getDungeon();
-            app.getGame().disableEvents();
-            gameDungeon.switchLevelOffset(this.level);
-            gameDungeon.offsetPlayerLocationW(this.level);
-            PartyManager.getParty().offsetZone(this.level);
-            AbstractGameObject.setTemplateColor(ImageColorConstants
-                    .getColorForLevel(PartyManager.getParty().getZone()));
-            app.getGame().resetViewingWindow();
-            app.getGame().enableEvents();
-            app.getGame().redrawDungeon();
-        } catch (final Exception ex) {
-            Chrystalz.getErrorLogger().logError(ex);
-        } finally {
-            this.loadFrame.setVisible(false);
-        }
+	try {
+	    this.loadFrame.setVisible(true);
+	    final Application app = Chrystalz.getApplication();
+	    final Dungeon gameDungeon = app.getDungeonManager().getDungeon();
+	    app.getGame().disableEvents();
+	    gameDungeon.switchLevelOffset(this.level);
+	    gameDungeon.offsetPlayerLocationW(this.level);
+	    PartyManager.getParty().offsetZone(this.level);
+	    AbstractGameObject
+		    .setTemplateColor(ImageColorConstants.getColorForLevel(PartyManager.getParty().getZone()));
+	    app.getGame().resetViewingWindow();
+	    app.getGame().enableEvents();
+	    app.getGame().redrawDungeon();
+	} catch (final Exception ex) {
+	    Chrystalz.getErrorLogger().logError(ex);
+	} finally {
+	    this.loadFrame.setVisible(false);
+	}
     }
 }
